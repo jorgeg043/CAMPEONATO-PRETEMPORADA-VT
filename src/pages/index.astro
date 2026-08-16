@@ -3,10 +3,39 @@ import Layout from '../layouts/Layout.astro';
 ---
 
 <Layout>
-	<h1 class="text-4xl font-bold text-center text-red-500 mt-10">
-		Campeonato Pretemporada VT
-	</h1>
-	<p class="text-center text-gray-300 mt-4">
-		Sistema de posiciones F1 2025
-	</p>
+	<section class="flex flex-col items-center justify-center min-h-[75vh] text-center px-4">
+		
+		<!-- Título de Bienvenida -->
+		<h1 class="text-5xl md:text-7xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-red-500 to-red-700 uppercase tracking-tighter mb-4">
+			Bienvenidos al <br />
+			<span class="text-white drop-shadow-lg">Campeonato Pretemporada VT F1</span>
+		</h1>
+		
+		<!-- Subtítulo -->
+		<p class="text-xl text-gray-300 max-w-2xl mb-12">
+			La pista te espera para demostrar quién manda antes del inicio oficial de la temporada.
+		</p>
+
+		<!-- Tarjeta de Inscripción -->
+		<div class="bg-gray-800/50 backdrop-blur-sm p-8 md:p-10 rounded-2xl border border-gray-700 shadow-2xl max-w-md w-full">
+			<h2 class="text-3xl font-bold text-white mb-2 uppercase tracking-wide">
+				Inscripción
+			</h2>
+			<p class="text-gray-400 mb-8">
+				Completá el formulario oficial para reservar tu butaca en la parrilla de salida. ¡Cupos limitados!
+			</p>
+			
+			<!-- Botón de Google Forms -->
+			<!-- Reemplazá el # por tu link real de Google Forms -->
+			<a 
+				href="https://docs.google.com/forms/d/e/1FAIpQLSebFbwAJF2RS-SAx8WFCUnn6lPf55tsH5Q9Z6eWEGg1FNB07w/viewform?usp=publish-editor" 
+				target="_blank" 
+				rel="noopener noreferrer"
+				class="block w-full bg-red-600 hover:bg-red-500 text-white font-bold py-4 px-6 rounded-lg transition-all duration-300 text-lg uppercase tracking-widest shadow-[0_0_20px_rgba(220,38,38,0.4)] hover:shadow-[0_0_30px_rgba(220,38,38,0.6)] hover:-translate-y-1"
+			>
+				Completar Formulario
+			</a>
+		</div>
+
+	</section>
 </Layout>
