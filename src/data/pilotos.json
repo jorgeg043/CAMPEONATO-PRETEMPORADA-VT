@@ -1,0 +1,282 @@
+[
+  {
+    "id": "piloto-1",
+    "nombre": "Piloto 1",
+    "numero": 1,
+    "periferico": "Simulador",
+    "instagram": "https://instagram.com/usuario1",
+    "fotoPiloto": "/pilotos/piloto-1.png",
+    "escuderia": {
+      "id": "red-bull",
+      "nombre": "Red Bull Racing",
+      "logoEscuderia": "/escuderias/red-bull.png",
+      "colorHex": "#3671C6"
+    }
+  },
+  {
+    "id": "piloto-2",
+    "nombre": "Piloto 2",
+    "numero": 11,
+    "periferico": "Joystick",
+    "instagram": "https://instagram.com/usuario2",
+    "fotoPiloto": "/pilotos/piloto-2.png",
+    "escuderia": {
+      "id": "red-bull",
+      "nombre": "Red Bull Racing",
+      "logoEscuderia": "/escuderias/red-bull.png",
+      "colorHex": "#3671C6"
+    }
+  },
+  {
+    "id": "piloto-3",
+    "nombre": "Piloto 3",
+    "numero": 16,
+    "periferico": "Simulador",
+    "instagram": "https://instagram.com/usuario3",
+    "fotoPiloto": "/pilotos/piloto-3.png",
+    "escuderia": {
+      "id": "ferrari",
+      "nombre": "Scuderia Ferrari",
+      "logoEscuderia": "/escuderias/ferrari.png",
+      "colorHex": "#E80020"
+    }
+  },
+  {
+    "id": "piloto-4",
+    "nombre": "Piloto 4",
+    "numero": 55,
+    "periferico": "Joystick",
+    "instagram": "https://instagram.com/usuario4",
+    "fotoPiloto": "/pilotos/piloto-4.png",
+    "escuderia": {
+      "id": "ferrari",
+      "nombre": "Scuderia Ferrari",
+      "logoEscuderia": "/escuderias/ferrari.png",
+      "colorHex": "#E80020"
+    }
+  },
+  {
+    "id": "piloto-5",
+    "nombre": "Piloto 5",
+    "numero": 4,
+    "periferico": "Simulador",
+    "instagram": "https://instagram.com/usuario5",
+    "fotoPiloto": "/pilotos/piloto-5.png",
+    "escuderia": {
+      "id": "mclaren",
+      "nombre": "McLaren F1 Team",
+      "logoEscuderia": "/escuderias/mclaren.png",
+      "colorHex": "#FF8000"
+    }
+  },
+  {
+    "id": "piloto-6",
+    "nombre": "Piloto 6",
+    "numero": 81,
+    "periferico": "Joystick",
+    "instagram": "https://instagram.com/usuario6",
+    "fotoPiloto": "/pilotos/piloto-6.png",
+    "escuderia": {
+      "id": "mclaren",
+      "nombre": "McLaren F1 Team",
+      "logoEscuderia": "/escuderias/mclaren.png",
+      "colorHex": "#FF8000"
+    }
+  },
+  {
+    "id": "piloto-7",
+    "nombre": "Piloto 7",
+    "numero": 63,
+    "periferico": "Simulador",
+    "instagram": "https://instagram.com/usuario7",
+    "fotoPiloto": "/pilotos/piloto-7.png",
+    "escuderia": {
+      "id": "mercedes",
+      "nombre": "Mercedes-AMG F1",
+      "logoEscuderia": "/escuderias/mercedes.png",
+      "colorHex": "#27F4D2"
+    }
+  },
+  {
+    "id": "piloto-8",
+    "nombre": "Piloto 8",
+    "numero": 44,
+    "periferico": "Joystick",
+    "instagram": "https://instagram.com/usuario8",
+    "fotoPiloto": "/pilotos/piloto-8.png",
+    "escuderia": {
+      "id": "mercedes",
+      "nombre": "Mercedes-AMG F1",
+      "logoEscuderia": "/escuderias/mercedes.png",
+      "colorHex": "#27F4D2"
+    }
+  },
+  {
+    "id": "piloto-9",
+    "nombre": "Piloto 9",
+    "numero": 14,
+    "periferico": "Simulador",
+    "instagram": "https://instagram.com/usuario9",
+    "fotoPiloto": "/pilotos/piloto-9.png",
+    "escuderia": {
+      "id": "aston-martin",
+      "nombre": "Aston Martin F1",
+      "logoEscuderia": "/escuderias/aston-martin.png",
+      "colorHex": "#229971"
+    }
+  },
+  {
+    "id": "piloto-10",
+    "nombre": "Piloto 10",
+    "numero": 18,
+    "periferico": "Joystick",
+    "instagram": "https://instagram.com/usuario10",
+    "fotoPiloto": "/pilotos/piloto-10.png",
+    "escuderia": {
+      "id": "aston-martin",
+      "nombre": "Aston Martin F1",
+      "logoEscuderia": "/escuderias/aston-martin.png",
+      "colorHex": "#229971"
+    }
+  },
+  {
+    "id": "piloto-11",
+    "nombre": "Piloto 11",
+    "numero": 10,
+    "periferico": "Simulador",
+    "instagram": "https://instagram.com/usuario11",
+    "fotoPiloto": "/pilotos/piloto-11.png",
+    "escuderia": {
+      "id": "alpine",
+      "nombre": "Alpine F1 Team",
+      "logoEscuderia": "/escuderias/alpine.png",
+      "colorHex": "#0093CC"
+    }
+  },
+  {
+    "id": "piloto-12",
+    "nombre": "Piloto 12",
+    "numero": 31,
+    "periferico": "Joystick",
+    "instagram": "https://instagram.com/usuario12",
+    "fotoPiloto": "/pilotos/piloto-12.png",
+    "escuderia": {
+      "id": "alpine",
+      "nombre": "Alpine F1 Team",
+      "logoEscuderia": "/escuderias/alpine.png",
+      "colorHex": "#0093CC"
+    }
+  },
+  {
+    "id": "piloto-13",
+    "nombre": "Piloto 13",
+    "numero": 20,
+    "periferico": "Simulador",
+    "instagram": "https://instagram.com/usuario13",
+    "fotoPiloto": "/pilotos/piloto-13.png",
+    "escuderia": {
+      "id": "haas",
+      "nombre": "Haas F1 Team",
+      "logoEscuderia": "/escuderias/haas.png",
+      "colorHex": "#B6BABD"
+    }
+  },
+  {
+    "id": "piloto-14",
+    "nombre": "Piloto 14",
+    "numero": 27,
+    "periferico": "Joystick",
+    "instagram": "https://instagram.com/usuario14",
+    "fotoPiloto": "/pilotos/piloto-14.png",
+    "escuderia": {
+      "id": "haas",
+      "nombre": "Haas F1 Team",
+      "logoEscuderia": "/escuderias/haas.png",
+      "colorHex": "#B6BABD"
+    }
+  },
+  {
+    "id": "piloto-15",
+    "nombre": "Piloto 15",
+    "numero": 22,
+    "periferico": "Simulador",
+    "instagram": "https://instagram.com/usuario15",
+    "fotoPiloto": "/pilotos/piloto-15.png",
+    "escuderia": {
+      "id": "rb",
+      "nombre": "Racing Bulls",
+      "logoEscuderia": "/escuderias/rb.png",
+      "colorHex": "#6692FF"
+    }
+  },
+  {
+    "id": "piloto-16",
+    "nombre": "Piloto 16",
+    "numero": 3,
+    "periferico": "Joystick",
+    "instagram": "https://instagram.com/usuario16",
+    "fotoPiloto": "/pilotos/piloto-16.png",
+    "escuderia": {
+      "id": "rb",
+      "nombre": "Racing Bulls",
+      "logoEscuderia": "/escuderias/rb.png",
+      "colorHex": "#6692FF"
+    }
+  },
+  {
+    "id": "piloto-17",
+    "nombre": "Piloto 17",
+    "numero": 77,
+    "periferico": "Simulador",
+    "instagram": "https://instagram.com/usuario17",
+    "fotoPiloto": "/pilotos/piloto-17.png",
+    "escuderia": {
+      "id": "sauber",
+      "nombre": "Sauber F1 Team",
+      "logoEscuderia": "/escuderias/sauber.png",
+      "colorHex": "#52E252"
+    }
+  },
+  {
+    "id": "piloto-18",
+    "nombre": "Piloto 18",
+    "numero": 24,
+    "periferico": "Joystick",
+    "instagram": "https://instagram.com/usuario18",
+    "fotoPiloto": "/pilotos/piloto-18.png",
+    "escuderia": {
+      "id": "sauber",
+      "nombre": "Sauber F1 Team",
+      "logoEscuderia": "/escuderias/sauber.png",
+      "colorHex": "#52E252"
+    }
+  },
+  {
+    "id": "piloto-19",
+    "nombre": "Piloto 19",
+    "numero": 23,
+    "periferico": "Simulador",
+    "instagram": "https://instagram.com/usuario19",
+    "fotoPiloto": "/pilotos/piloto-19.png",
+    "escuderia": {
+      "id": "williams",
+      "nombre": "Williams Racing",
+      "logoEscuderia": "/escuderias/williams.png",
+      "colorHex": "#64C4FF"
+    }
+  },
+  {
+    "id": "piloto-20",
+    "nombre": "Piloto 20",
+    "numero": 2,
+    "periferico": "Joystick",
+    "instagram": "https://instagram.com/usuario20",
+    "fotoPiloto": "/pilotos/piloto-20.png",
+    "escuderia": {
+      "id": "williams",
+      "nombre": "Williams Racing",
+      "logoEscuderia": "/escuderias/williams.png",
+      "colorHex": "#64C4FF"
+    }
+  }
+]

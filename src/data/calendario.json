@@ -1,0 +1,146 @@
+[
+  {
+    "numeroFecha": 1,
+    "circuito": "Yas Marina Circuit",
+    "pais": "Abu Dhabi",
+    "bandera": "🇦🇪",
+    "fechaGranPremio": "2026-10-16",
+    "hora": "22:00",
+    "estado": "proxima",
+    "distanciaKm": "5.281 km",
+    "curvas": 16,
+    "zonasDrs": 2,
+    "imagenCircuito": "/circuitos/abu-dhabi.png",
+    "compuestos": {
+      "blando": "C5",
+      "medio": "C4",
+      "duro": "C3"
+    }
+  },
+  {
+    "numeroFecha": 2,
+    "circuito": "Marina Bay Street Circuit",
+    "pais": "Singapur",
+    "bandera": "🇸🇬",
+    "fechaGranPremio": "2026-10-23",
+    "hora": "22:00",
+    "estado": "pendiente",
+    "distanciaKm": "4.940 km",
+    "curvas": 19,
+    "zonasDrs": 4,
+    "imagenCircuito": "/circuitos/singapur.png",
+    "compuestos": {
+      "blando": "C5",
+      "medio": "C4",
+      "duro": "C3"
+    }
+  },
+  {
+    "numeroFecha": 3,
+    "circuito": "Red Bull Ring",
+    "pais": "Austria",
+    "bandera": "🇦🇹",
+    "fechaGranPremio": "2026-10-30",
+    "hora": "22:00",
+    "estado": "pendiente",
+    "distanciaKm": "4.318 km",
+    "curvas": 10,
+    "zonasDrs": 3,
+    "imagenCircuito": "/circuitos/austria.png",
+    "compuestos": {
+      "blando": "C5",
+      "medio": "C4",
+      "duro": "C3"
+    }
+  },
+  {
+    "numeroFecha": 4,
+    "circuito": "Circuit de Spa-Francorchamps",
+    "pais": "Bélgica",
+    "bandera": "🇧🇪",
+    "fechaGranPremio": "2026-11-06",
+    "hora": "22:00",
+    "estado": "pendiente",
+    "distanciaKm": "7.004 km",
+    "curvas": 19,
+    "zonasDrs": 2,
+    "imagenCircuito": "/circuitos/belgica.png",
+    "compuestos": {
+      "blando": "C4",
+      "medio": "C3",
+      "duro": "C2"
+    }
+  },
+  {
+    "numeroFecha": 5,
+    "circuito": "Baku City Circuit",
+    "pais": "Azerbaiyán",
+    "bandera": "🇦🇿",
+    "fechaGranPremio": "2026-11-13",
+    "hora": "22:00",
+    "estado": "pendiente",
+    "distanciaKm": "6.003 km",
+    "curvas": 20,
+    "zonasDrs": 2,
+    "imagenCircuito": "/circuitos/azerbaiyan.png",
+    "compuestos": {
+      "blando": "C5",
+      "medio": "C4",
+      "duro": "C3"
+    }
+  },
+  {
+    "numeroFecha": 6,
+    "circuito": "Autodromo Nazionale Monza",
+    "pais": "Italia",
+    "bandera": "🇮🇹",
+    "fechaGranPremio": "2026-11-20",
+    "hora": "22:00",
+    "estado": "pendiente",
+    "distanciaKm": "5.793 km",
+    "curvas": 11,
+    "zonasDrs": 2,
+    "imagenCircuito": "/circuitos/italia.png",
+    "compuestos": {
+      "blando": "C5",
+      "medio": "C4",
+      "duro": "C3"
+    }
+  },
+  {
+    "numeroFecha": 7,
+    "circuito": "Suzuka International Racing Course",
+    "pais": "Japón",
+    "bandera": "🇯🇵",
+    "fechaGranPremio": "2026-11-27",
+    "hora": "22:00",
+    "estado": "pendiente",
+    "distanciaKm": "5.807 km",
+    "curvas": 18,
+    "zonasDrs": 1,
+    "imagenCircuito": "/circuitos/japon.png",
+    "compuestos": {
+      "blando": "C3",
+      "medio": "C2",
+      "duro": "C1"
+    }
+  },
+  {
+    "numeroFecha": 8,
+    "circuito": "Miami International Autodrome",
+    "pais": "EE.UU.",
+    "bandera": "🇺🇸",
+    "fechaGranPremio": "2026-12-04",
+    "hora": "22:00",
+    "estado": "pendiente",
+    "distanciaKm": "5.412 km",
+    "curvas": 19,
+    "zonasDrs": 3,
+    "imagenCircuito": "/circuitos/eeuu.png",
+    "compuestos": {
+      "blando": "C5",
+      "medio": "C4",
+      "duro": "C3"
+    }
+  }
+]
