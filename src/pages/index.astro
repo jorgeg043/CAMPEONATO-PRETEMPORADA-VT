@@ -3,18 +3,14 @@ import Layout from '../layouts/Layout.astro';
 import calendario from '../data/calendario.json';
 import pilotosData from '../data/pilotos.json';
 
-// Lógica de separación: Próxima carrera vs Resto de la temporada
 const proximaCarrera = calendario.find((c) => c.estado === 'proxima') || calendario[0];
 const restoCarreras = calendario.filter((c) => c.numeroFecha !== proximaCarrera.numeroFecha);
 
-// Carga dinámica de todas las fechas disputadas en /data/carreras/
 const archivosCarreras = import.meta.glob('../data/carreras/*.json', { eager: true });
 const carrerasCargadas = Object.values(archivosCarreras).map((file: any) => file.default || file);
----
 
 const PUNTOS_F1: Record<number, number> = { 1: 25, 2: 18, 3: 15, 4: 12, 5: 10, 6: 8, 7: 6, 8: 4, 9: 2, 10: 1 };
 
-// 3. Procesamiento y cálculo automático de la tabla general
 const tablaCampeonatoProcesada = pilotosData.map((piloto) => {
     let puntosTotales = 0;
     let victorias = 0;
@@ -36,11 +32,7 @@ const tablaCampeonatoProcesada = pilotosData.map((piloto) => {
         }
     });
 
-    return {
-        ...piloto,
-        puntosTotales,
-        victorias
-    };
+    return { ...piloto, puntosTotales, victorias };
 })
 .sort((a, b) => b.puntosTotales - a.puntosTotales || b.victorias - a.victorias)
 .map((piloto, index, lista) => {
@@ -48,22 +40,12 @@ const tablaCampeonatoProcesada = pilotosData.map((piloto) => {
     let difAdelante = 0;
     let difAtras = 0;
 
-    if (index > 0) {
-        difAdelante = lista[index - 1].puntosTotales - piloto.puntosTotales;
-    }
-    if (index < lista.length - 1) {
-        difAtras = piloto.puntosTotales - lista[index + 1].puntosTotales;
-    }
+    if (index > 0) difAdelante = lista[index - 1].puntosTotales - piloto.puntosTotales;
+    if (index < lista.length - 1) difAtras = piloto.puntosTotales - lista[index + 1].puntosTotales;
 
-    return {
-        ...piloto,
-        posicion,
-        difAdelante,
-        difAtras
-    };
+    return { ...piloto, posicion, difAdelante, difAtras };
 });
 
-// 4. Procesamiento Copa de Constructores
 const escuderiasProcesadas = pilotosData.reduce((acc: any[], piloto) => {
   const escuderiaId = piloto.escuderia.id;
   const pilotoProcesado = tablaCampeonatoProcesada.find(p => p.id === piloto.id);
@@ -75,10 +57,7 @@ const escuderiasProcesadas = pilotosData.reduce((acc: any[], piloto) => {
   if (escuderiaExistente) {
     escuderiaExistente.puntosTotales += puntosPiloto;
     escuderiaExistente.victoriasTotales += victoriasPiloto;
-    escuderiaExistente.pilotos.push({
-      nombre: piloto.nombre,
-      fotoPiloto: piloto.fotoPiloto
-    });
+    escuderiaExistente.pilotos.push({ nombre: piloto.nombre, fotoPiloto: piloto.fotoPiloto });
   } else {
     acc.push({
       id: escuderiaId,
@@ -87,10 +66,7 @@ const escuderiasProcesadas = pilotosData.reduce((acc: any[], piloto) => {
       colorHex: piloto.escuderia.colorHex,
       puntosTotales: puntosPiloto,
       victoriasTotales: victoriasPiloto,
-      pilotos: [{
-        nombre: piloto.nombre,
-        fotoPiloto: piloto.fotoPiloto
-      }]
+      pilotos: [{ nombre: piloto.nombre, fotoPiloto: piloto.fotoPiloto }]
     });
   }
 
@@ -104,26 +80,16 @@ const tablaConstructores = escuderiasProcesadas
     let difAdelante = 0;
     let difAtras = 0;
 
-    if (index > 0) {
-      difAdelante = lista[index - 1].puntosTotales - escuderia.puntosTotales;
-    }
-    if (index < lista.length - 1) {
-      difAtras = escuderia.puntosTotales - lista[index + 1].puntosTotales;
-    }
+    if (index > 0) difAdelante = lista[index - 1].puntosTotales - escuderia.puntosTotales;
+    if (index < lista.length - 1) difAtras = escuderia.puntosTotales - lista[index + 1].puntosTotales;
 
-    return {
-      ...escuderia,
-      posicion,
-      difAdelante,
-      difAtras
-    };
+    return { ...escuderia, posicion, difAdelante, difAtras };
   });
 ---
 
 <Layout>
     <section class="max-w-6xl mx-auto px-4 py-8 space-y-16">
         
-        <!-- TÍTULO PRINCIPAL DE LA PÁGINA -->
         <div class="text-center pt-6 space-y-3">
             <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-red-950/60 border border-red-800/50 text-red-400 text-xs font-mono uppercase tracking-widest shadow-[0_0_15px_rgba(225,6,0,0.3)]">
                 <span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
@@ -141,7 +107,6 @@ const tablaConstructores = escuderiasProcesadas
             </p>
         </div>
 
-        <!-- TARJETA DESTACADA COMPLETA: PRÓXIMA CARRERA -->
         <div class="relative bg-gradient-to-b from-[#140505] to-[#0a0a0a] rounded-3xl border border-red-600/70 p-6 md:p-10 shadow-[0_0_50px_rgba(225,6,0,0.25)] overflow-hidden">
             <div class="absolute -top-24 -right-24 w-72 h-72 bg-red-600/20 rounded-full blur-3xl pointer-events-none"></div>
 
@@ -224,7 +189,6 @@ const tablaConstructores = escuderiasProcesadas
             </div>
         </div>
 
-        <!-- SECCIÓN: TABLA GENERAL DEL CAMPEONATO -->
         <div class="space-y-6">
             <div class="flex justify-between items-end border-b border-neutral-800 pb-4">
                 <div>
@@ -322,7 +286,6 @@ const tablaConstructores = escuderiasProcesadas
             </div>
         </div>
 
-        <!-- SECCIÓN: COPA DE CONSTRUCTORES / ESCUDERÍAS -->
         <div class="space-y-6">
             <div class="flex justify-between items-end border-b border-neutral-800 pb-4">
                 <div>
@@ -420,7 +383,6 @@ const tablaConstructores = escuderiasProcesadas
             </div>
         </div>
 
-        {/* CARRUSEL DE PILOTOS OFICIALES */}
         <div class="space-y-6">
             <div class="flex justify-between items-end border-b border-neutral-800 pb-4">
                 <div>
@@ -494,7 +456,6 @@ const tablaConstructores = escuderiasProcesadas
             </div>
         </div>
 
-        <!-- RESTO DEL CALENDARIO -->
         <div class="space-y-6">
             <div class="border-b border-neutral-800 pb-4">
                 <h3 class="text-2xl md:text-3xl font-black uppercase tracking-tight text-white">
