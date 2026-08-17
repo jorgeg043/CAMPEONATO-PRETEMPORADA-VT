@@ -6,12 +6,11 @@ import pilotos from '../data/pilotos.json';
 // Lógica de separación: Próxima carrera vs Resto de la temporada
 const proximaCarrera = calendario.find((c) => c.estado === 'proxima') || calendario[0];
 const restoCarreras = calendario.filter((c) => c.numeroFecha !== proximaCarrera.numeroFecha);
-// --- INICIO CÓDIGO FRONTMATTER (Colocar arriba de todo en index.astro) ---
 
 
 
 // --- INICIO CÓDIGO FRONTMATTER (Colocar arriba de todo en index.astro) ---
-
+import pilotosData from '../data/pilotos.json';
 
 // Carga dinámica de todas las fechas disputadas en /data/carreras/
 const archivosCarreras = import.meta.glob('../data/carreras/*.json', { eager: true });
