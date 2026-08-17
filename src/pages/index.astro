@@ -10,24 +10,61 @@ const archivosCarreras = import.meta.glob('../data/carreras/*.json', { eager: tr
 const carrerasCargadas = Object.values(archivosCarreras).map((file: any) => file.default || file);
 
 const PUNTOS_F1: Record<number, number> = { 1: 25, 2: 18, 3: 15, 4: 12, 5: 10, 6: 8, 7: 6, 8: 4, 9: 2, 10: 1 };
+// NUEVO: Puntos especiales para la Carrera 2 (Top 8)
+const PUNTOS_CARRERA2: Record<number, number> = { 1: 8, 2: 7, 3: 6, 4: 5, 5: 4, 6: 3, 7: 2, 8: 1 };
 
 const tablaCampeonatoProcesada = pilotosData.map((piloto) => {
     let puntosTotales = 0;
     let victorias = 0;
 
     carrerasCargadas.forEach((carrera: any) => {
-        const resultado = carrera.posiciones?.find((p: any) => p.pilotoId === piloto.id);
+        // La POLE POSITION siempre da 1 punto, sea formato normal o doble
         const esPole = carrera.polePosition?.pilotoId === piloto.id;
-        const esVR = carrera.vueltaRapida?.pilotoId === piloto.id;
-
         if (esPole) puntosTotales += 1;
 
-        if (resultado && !resultado.dnf) {
-            if (resultado.posicion >= 1 && resultado.posicion <= 10) {
-                puntosTotales += PUNTOS_F1[resultado.posicion] || 0;
+        if (carrera.formato === 'doble') {
+            // ==========================================
+            // LÓGICA FECHA ESPECIAL (DOBLE CARRERA)
+            // ==========================================
+            
+            // --- CARRERA 1 (Puntos Normales) ---
+            const resC1 = carrera.carrera1?.posiciones?.find((p: any) => p.pilotoId === piloto.id);
+            const vrC1 = carrera.carrera1?.vueltaRapida?.pilotoId === piloto.id;
+
+            if (resC1 && !resC1.dnf) {
+                if (resC1.posicion >= 1 && resC1.posicion <= 10) {
+                    puntosTotales += PUNTOS_F1[resC1.posicion] || 0;
+                }
+                if (resC1.posicion === 1) victorias += 1;
+                if (vrC1) puntosTotales += 1; // Punto VR C1
             }
-            if (resultado.posicion === 1) victorias += 1;
-            if (esVR) puntosTotales += 1;
+
+            // --- CARRERA 2 (Puntos Top 8) ---
+            const resC2 = carrera.carrera2?.posiciones?.find((p: any) => p.pilotoId === piloto.id);
+            const vrC2 = carrera.carrera2?.vueltaRapida?.pilotoId === piloto.id;
+
+            if (resC2 && !resC2.dnf) {
+                if (resC2.posicion >= 1 && resC2.posicion <= 8) {
+                    puntosTotales += PUNTOS_CARRERA2[resC2.posicion] || 0;
+                }
+                if (resC2.posicion === 1) victorias += 1;
+                if (vrC2) puntosTotales += 1; // Punto VR C2
+            }
+
+        } else {
+            // ==========================================
+            // LÓGICA CARRERA NORMAL
+            // ==========================================
+            const resultado = carrera.posiciones?.find((p: any) => p.pilotoId === piloto.id);
+            const esVR = carrera.vueltaRapida?.pilotoId === piloto.id;
+
+            if (resultado && !resultado.dnf) {
+                if (resultado.posicion >= 1 && resultado.posicion <= 10) {
+                    puntosTotales += PUNTOS_F1[resultado.posicion] || 0;
+                }
+                if (resultado.posicion === 1) victorias += 1;
+                if (esVR) puntosTotales += 1; // Punto VR
+            }
         }
     });
 

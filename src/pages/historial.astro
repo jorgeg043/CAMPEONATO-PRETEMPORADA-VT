@@ -3,245 +3,357 @@ import Layout from '../layouts/Layout.astro';
 import calendario from '../data/calendario.json';
 import pilotos from '../data/pilotos.json';
 
-// Carga automática de todas las carreras guardadas en /data/carreras/
 const archivosCarreras = import.meta.glob('../data/carreras/*.json', { eager: true });
 const carrerasCargadas = Object.values(archivosCarreras).map((file: any) => file.default || file);
 
-// Sistema de Puntuación F1
 const PUNTOS: Record<number, number> = { 1: 25, 2: 18, 3: 15, 4: 12, 5: 10, 6: 8, 7: 6, 8: 4, 9: 2, 10: 1 };
+const PUNTOS_C2: Record<number, number> = { 1: 8, 2: 7, 3: 6, 4: 5, 5: 4, 6: 3, 7: 2, 8: 1 };
 
-// Cruzamos la información del calendario con la telemetría de cada carrera
 const historialCompleto = calendario.map((evento) => {
-	const resultadoCarrera = carrerasCargadas.find((c) => c.numeroFecha === evento.numeroFecha);
-	
-	if (!resultadoCarrera) {
-		return { ...evento, disputada: false, resultados: [] };
-	}
+    const resultadoCarrera = carrerasCargadas.find((c) => c.numeroFecha === evento.numeroFecha);
+    
+    if (!resultadoCarrera) {
+        return { ...evento, disputada: false, resultados: [] };
+    }
 
-	const poleman = pilotos.find((p) => p.id === resultadoCarrera.polePosition?.pilotoId);
-	const vrPiloto = pilotos.find((p) => p.id === resultadoCarrera.vueltaRapida?.pilotoId);
+    if (resultadoCarrera.formato === 'doble') {
+        const procesar = (arr: any[], esC2: boolean, vrId: string) => arr.map(pos => {
+            const piloto = pilotos.find((p) => p.id === pos.pilotoId);
+            let puntosFecha = !pos.dnf ? ((esC2 ? PUNTOS_C2[pos.posicion] : PUNTOS[pos.posicion]) || 0) : 0;
+            if (vrId === pos.pilotoId) puntosFecha += 1;
+            if (resultadoCarrera.polePosition?.pilotoId === pos.pilotoId) puntosFecha += 1;
+            return { ...pos, piloto, esPole: resultadoCarrera.polePosition?.pilotoId === pos.pilotoId, esVueltaRapida: vrId === pos.pilotoId, puntosFecha };
+        }).sort((a, b) => (a.dnf ? 1 : 0) - (b.dnf ? 1 : 0) || a.posicion - b.posicion);
 
-	const tablaPosiciones = resultadoCarrera.posiciones.map((pos: any) => {
-		const piloto = pilotos.find((p) => p.id === pos.pilotoId);
-		const esPole = resultadoCarrera.polePosition?.pilotoId === pos.pilotoId;
-		const esVueltaRapida = resultadoCarrera.vueltaRapida?.pilotoId === pos.pilotoId;
-		
-		let puntosFecha = 0;
-		if (!pos.dnf) {
-			puntosFecha += PUNTOS[pos.posicion] || 0;
-			if (esVueltaRapida) puntosFecha += 1;
-		}
-		if (esPole) puntosFecha += 1;
+        return {
+            ...evento, 
+            disputada: true, 
+            formato: 'doble',
+            resultadosC1: procesar(resultadoCarrera.carrera1.posiciones, false, resultadoCarrera.carrera1.vueltaRapida?.pilotoId),
+            resultadosC2: procesar(resultadoCarrera.carrera2.posiciones, true, resultadoCarrera.carrera2.vueltaRapida?.pilotoId),
+            poleman: pilotos.find((p) => p.id === resultadoCarrera.polePosition?.pilotoId),
+            tiempoQualy: resultadoCarrera.polePosition?.tiempoQualy,
+            vueltaRapidaPilotoC1: pilotos.find((p) => p.id === resultadoCarrera.carrera1.vueltaRapida?.pilotoId),
+            tiempoVueltaC1: resultadoCarrera.carrera1.vueltaRapida?.tiempoVuelta,
+            vueltaRapidaPilotoC2: pilotos.find((p) => p.id === resultadoCarrera.carrera2.vueltaRapida?.pilotoId),
+            tiempoVueltaC2: resultadoCarrera.carrera2.vueltaRapida?.tiempoVuelta
+        };
+    }
 
-		return {
-			...pos,
-			piloto,
-			esPole,
-			esVueltaRapida,
-			puntosFecha
-		};
-	}).sort((a: any, b: any) => {
-		if (a.dnf && !b.dnf) return 1;
-		if (!a.dnf && b.dnf) return -1;
-		return a.posicion - b.posicion;
-	});
+    const poleman = pilotos.find((p) => p.id === resultadoCarrera.polePosition?.pilotoId);
+    const vrPiloto = pilotos.find((p) => p.id === resultadoCarrera.vueltaRapida?.pilotoId);
 
-	return {
-		...evento,
-		disputada: true,
-		tiempoTotalCarrera: resultadoCarrera.tiempoTotalCarrera,
-		poleman,
-		tiempoQualy: resultadoCarrera.polePosition?.tiempoQualy,
-		vueltaRapidaPiloto: vrPiloto,
-		tiempoVuelta: resultadoCarrera.vueltaRapida?.tiempoVuelta,
-		resultados: tablaPosiciones
-	};
+    const tablaPosiciones = resultadoCarrera.posiciones.map((pos: any) => {
+        const piloto = pilotos.find((p) => p.id === pos.pilotoId);
+        const esPole = resultadoCarrera.polePosition?.pilotoId === pos.pilotoId;
+        const esVueltaRapida = resultadoCarrera.vueltaRapida?.pilotoId === pos.pilotoId;
+        
+        let puntosFecha = 0;
+        if (!pos.dnf) {
+            puntosFecha += PUNTOS[pos.posicion] || 0;
+            if (esVueltaRapida) puntosFecha += 1;
+        }
+        if (esPole) puntosFecha += 1;
+
+        return {
+            ...pos,
+            piloto,
+            esPole,
+            esVueltaRapida,
+            puntosFecha
+        };
+    }).sort((a: any, b: any) => {
+        if (a.dnf && !b.dnf) return 1;
+        if (!a.dnf && b.dnf) return -1;
+        return a.posicion - b.posicion;
+    });
+
+    return {
+        ...evento,
+        disputada: true,
+        formato: 'normal',
+        tiempoTotalCarrera: resultadoCarrera.tiempoTotalCarrera,
+        poleman,
+        tiempoQualy: resultadoCarrera.polePosition?.tiempoQualy,
+        vueltaRapidaPiloto: vrPiloto,
+        tiempoVuelta: resultadoCarrera.vueltaRapida?.tiempoVuelta,
+        resultados: tablaPosiciones
+    };
 });
 ---
 
 <Layout>
-	<section class="max-w-6xl mx-auto py-8 px-4 space-y-12">
-		
-		<!-- Encabezado de la página -->
-		<div class="text-center">
-			<h1 class="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-2">
-				Historial de <span class="bg-gradient-to-r from-red-500 to-red-700 bg-clip-text text-transparent drop-shadow-[0_0_25px_rgba(225,6,0,0.8)]">Carreras</span>
-			</h1>
-			<p class="text-gray-400 font-mono text-sm">
-				Telemetría oficial, sanciones y clasificación fecha por fecha
-			</p>
-		</div>
+    <section class="max-w-6xl mx-auto py-8 px-4 space-y-12">
+        <div class="text-center">
+            <h1 class="text-4xl md:text-6xl font-black uppercase tracking-tighter mb-2">
+                Historial de <span class="bg-gradient-to-r from-red-500 to-red-700 bg-clip-text text-transparent drop-shadow-[0_0_25px_rgba(225,6,0,0.8)]">Carreras</span>
+            </h1>
+            <p class="text-gray-400 font-mono text-sm">
+                Telemetría oficial, sanciones y clasificación fecha por fecha
+            </p>
+        </div>
 
-		<!-- Listado de Fechas -->
-		<div class="space-y-12">
-			{historialCompleto.map((fecha) => (
-				<div class={`bg-[#0d0d0d] rounded-2xl border overflow-hidden transition-all duration-300 ${
-					fecha.disputada ? 'border-neutral-800 shadow-[0_0_30px_rgba(0,0,0,0.5)]' : 'border-neutral-900 opacity-70'
-				}`}>
-					
-					<!-- Header de la Fecha (Pit Wall Telemetry) -->
-					<div class="bg-gradient-to-r from-neutral-950 via-[#120606] to-neutral-950 p-6 border-b border-neutral-800 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
-						<div>
-							<div class="flex items-center gap-2 mb-1">
-								<span class="text-xs font-mono text-red-500 font-bold uppercase bg-red-950/60 px-2.5 py-0.5 rounded border border-red-900/60">
-									FECHA {fecha.numeroFecha}
-								</span>
-								<span class="text-xs font-mono text-gray-500">{fecha.fechaGranPremio}</span>
-							</div>
-							<h2 class="text-3xl font-black text-white uppercase tracking-tight flex items-center gap-3">
-								<span>{fecha.bandera}</span> {fecha.pais}
-							</h2>
-							<p class="text-xs font-mono text-gray-400 mt-0.5">{fecha.circuito}</p>
-						</div>
+        <div class="space-y-12">
+            {historialCompleto.map((fecha) => (
+                <div class={`bg-[#0d0d0d] rounded-2xl border overflow-hidden transition-all duration-300 ${
+                    fecha.disputada ? 'border-neutral-800 shadow-[0_0_30px_rgba(0,0,0,0.5)]' : 'border-neutral-900 opacity-70'
+                }`}>
+                    <div class="bg-gradient-to-r from-neutral-950 via-[#120606] to-neutral-950 p-6 border-b border-neutral-800 flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6">
+                        <div>
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="text-xs font-mono text-red-500 font-bold uppercase bg-red-950/60 px-2.5 py-0.5 rounded border border-red-900/60">
+                                    FECHA {fecha.numeroFecha}
+                                </span>
+                                <span class="text-xs font-mono text-gray-500">{fecha.fechaGranPremio}</span>
+                            </div>
+                            <h2 class="text-3xl font-black text-white uppercase tracking-tight flex items-center gap-3">
+                                <span>{fecha.bandera}</span> {fecha.pais}
+                            </h2>
+                            <p class="text-xs font-mono text-gray-400 mt-0.5">{fecha.circuito}</p>
+                        </div>
 
-						{fecha.disputada ? (
-							<div class="grid grid-cols-2 sm:grid-cols-3 gap-4 font-mono text-xs bg-black/80 p-4 rounded-xl border border-neutral-800 w-full lg:w-auto">
-								<!-- Tiempo de Carrera -->
-								<div>
-									<span class="block text-[10px] text-gray-500 uppercase">Tiempo Carrera</span>
-									<span class="text-white font-bold">{fecha.tiempoTotalCarrera || '-'}</span>
-								</div>
+                        {fecha.disputada ? (
+                            <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 font-mono text-xs bg-black/80 p-4 rounded-xl border border-neutral-800 w-full lg:w-auto">
+                                <div>
+                                    <span class="block text-[10px] text-gray-500 uppercase">Carrera</span>
+                                    <span class="text-white font-bold">{fecha.formato === 'doble' ? 'Doble Carrera' : (fecha.tiempoTotalCarrera || '-')}</span>
+                                </div>
 
-								<!-- Pole Position -->
-								<div class="border-l border-neutral-800 pl-4">
-									<span class="block text-[10px] text-purple-400 uppercase font-bold">Pole Position</span>
-									<span class="text-white font-bold block truncate">{fecha.poleman?.nombre || '-'}</span>
-									<span class="text-[10px] text-purple-300">{fecha.tiempoQualy}</span>
-								</div>
+                                <div class="border-l border-neutral-800 pl-4">
+                                    <span class="block text-[10px] text-purple-400 uppercase font-bold">Pole Position</span>
+                                    <span class="text-white font-bold block truncate">{fecha.poleman?.nombre || '-'}</span>
+                                    <span class="text-[10px] text-purple-300">{fecha.tiempoQualy}</span>
+                                </div>
 
-								<!-- Vuelta Rápida -->
-								<div class="border-l border-neutral-800 pl-4 col-span-2 sm:col-span-1">
-									<span class="block text-[10px] text-emerald-400 uppercase font-bold">Vuelta Rápida</span>
-									<span class="text-white font-bold block truncate">{fecha.vueltaRapidaPiloto?.nombre || '-'}</span>
-									<span class="text-[10px] text-emerald-300">{fecha.tiempoVuelta}</span>
-								</div>
-							</div>
-						) : (
-							<span class="px-4 py-2 bg-neutral-900 border border-neutral-800 text-gray-500 rounded-xl font-mono text-xs uppercase">
-								Sin Disputar
-							</span>
-						)}
-					</div>
+                                <div class="border-l border-neutral-800 pl-4 col-span-2 sm:col-span-1">
+                                    <span class="block text-[10px] text-emerald-400 uppercase font-bold">Vuelta Rápida</span>
+                                    <span class="text-white font-bold block truncate">{fecha.formato === 'doble' ? 'C1: ' + (fecha.vueltaRapidaPilotoC1?.nombre || '-') : (fecha.vueltaRapidaPiloto?.nombre || '-')}</span>
+                                    <span class="text-[10px] text-emerald-300">{fecha.formato === 'doble' ? fecha.tiempoVueltaC1 : fecha.tiempoVuelta}</span>
+                                </div>
+                            </div>
+                        ) : (
+                            <span class="px-4 py-2 bg-neutral-900 border border-neutral-800 text-gray-500 rounded-xl font-mono text-xs uppercase">
+                                Sin Disputar
+                            </span>
+                        )}
+                    </div>
 
-					<!-- Tabla Desglosada de Telemetría -->
-					{fecha.disputada ? (
-						<div class="overflow-x-auto">
-							<table class="w-full text-left font-mono text-xs">
-								<thead class="bg-black/60 text-gray-500 uppercase text-[10px] border-b border-neutral-800 tracking-wider">
-									<tr>
-										<th class="py-3.5 px-4 text-center">Pos</th>
-										<th class="py-3.5 px-4">Piloto</th>
-										<th class="py-3.5 px-4">Escudería</th>
-										<th class="py-3.5 px-4 text-center">Stops</th>
-										<th class="py-3.5 px-4 text-center">Alerón</th>
-										<th class="py-3.5 px-4">Compuestos</th>
-										<th class="py-3.5 px-4">Sanciones / Advert.</th>
-										<th class="py-3.5 px-4 text-right">Puntos</th>
-									</tr>
-								</thead>
-								<tbody class="divide-y divide-neutral-900/80">
-									{fecha.resultados.map((res: any) => (
-										<tr class="hover:bg-neutral-900/50 transition-colors group">
-											
-											<!-- Posición / DNF -->
-											<td class="py-3 px-4 text-center font-bold text-sm">
-												{res.dnf ? (
-													<span class="text-red-500 bg-red-950/60 px-2 py-0.5 rounded border border-red-900 text-[11px]" title={res.motivoDnf}>
-														DNF
-													</span>
-												) : (
-													<span class="text-white">#{res.posicion}</span>
-												)}
-											</td>
+                    {fecha.disputada ? (
+                        <div class="p-6 space-y-8">
+                            {fecha.formato === 'doble' ? (
+                                <>
+                                    <div class="space-y-3">
+                                        <div class="flex items-center gap-2">
+                                            <span class="w-2 h-2 rounded-full bg-red-600"></span>
+                                            <h3 class="text-white font-black uppercase text-sm tracking-wider">Carrera 1 (Puntos Normales)</h3>
+                                        </div>
+                                        <div class="overflow-x-auto border border-neutral-800 rounded-xl">
+                                            <table class="w-full text-left font-mono text-xs">
+                                                <thead class="bg-black/60 text-gray-500 uppercase text-[10px] border-b border-neutral-800 tracking-wider">
+                                                    <tr>
+                                                        <th class="py-3.5 px-4 text-center">Pos</th>
+                                                        <th class="py-3.5 px-4">Piloto</th>
+                                                        <th class="py-3.5 px-4">Escudería</th>
+                                                        <th class="py-3.5 px-4 text-center">Stops</th>
+                                                        <th class="py-3.5 px-4 text-center">Alerón</th>
+                                                        <th class="py-3.5 px-4">Compuestos</th>
+                                                        <th class="py-3.5 px-4">Sanciones / Advert.</th>
+                                                        <th class="py-3.5 px-4 text-right">Puntos</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="divide-y divide-neutral-900/80">
+                                                    {fecha.resultadosC1.map((res: any) => (
+                                                        <tr class="hover:bg-neutral-900/50 transition-colors group">
+                                                            <td class="py-3 px-4 text-center font-bold text-sm">
+                                                                {res.dnf ? (
+                                                                    <span class="text-red-500 bg-red-950/60 px-2 py-0.5 rounded border border-red-900 text-[11px]" title={res.motivoDnf}>DNF</span>
+                                                                ) : (
+                                                                    <span class="text-white">#{res.posicion}</span>
+                                                                )}
+                                                            </td>
+                                                            <td class="py-3 px-4">
+                                                                <div class="flex items-center gap-2.5">
+                                                                    <img src={res.piloto?.fotoPiloto} class="w-7 h-7 rounded-full object-cover border border-neutral-700" />
+                                                                    <div>
+                                                                        <span class="font-bold text-white block group-hover:text-red-400 transition-colors">{res.piloto?.nombre}</span>
+                                                                        <div class="flex gap-1 mt-0.5">
+                                                                            {res.esPole && <span class="bg-purple-950 text-purple-400 border border-purple-800 px-1 py-0.2 rounded text-[8px] font-bold">POLE</span>}
+                                                                            {res.esVueltaRapida && !res.dnf && <span class="bg-emerald-950 text-emerald-400 border border-emerald-800 px-1 py-0.2 rounded text-[8px] font-bold">VR</span>}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td class="py-3 px-4 text-gray-400">
+                                                                <div class="flex items-center gap-1.5">
+                                                                    <span class="w-1.5 h-3 rounded-full" style={`background-color: ${res.piloto?.escuderia.colorHex}`}></span>
+                                                                    <span>{res.piloto?.escuderia.nombre}</span>
+                                                                </div>
+                                                            </td>
+                                                            <td class="py-3 px-4 text-center font-bold text-gray-300">{res.paradasBoxes}</td>
+                                                            <td class="py-3 px-4 text-center">
+                                                                {res.cambioAleron ? <span class="text-yellow-500 font-bold bg-yellow-950/40 px-1.5 py-0.5 rounded border border-yellow-800/60 text-[10px]">SÍ</span> : <span class="text-gray-600">-</span>}
+                                                            </td>
+                                                            <td class="py-3 px-4">
+                                                                <div class="flex gap-1 text-[10px]">
+                                                                    {res.compuestosUsados?.map((comp: string) => (
+                                                                        <span class="px-1.5 py-0.5 rounded font-bold border bg-neutral-800 text-white border-neutral-600">{comp[0]}</span>
+                                                                    ))}
+                                                                </div>
+                                                            </td>
+                                                            <td class="py-3 px-4 text-gray-400 text-[11px]">
+                                                                <span class={res.penalizaciones !== 'Sin sanciones' ? 'text-red-400 font-bold' : 'text-gray-500'}>{res.penalizaciones}</span>
+                                                                {res.advertencias > 0 && <span class="block text-[10px] text-gray-500">{res.advertencias} adv.</span>}
+                                                            </td>
+                                                            <td class="py-3 px-4 text-right font-black text-red-500 text-sm">+{res.puntosFecha}</td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
 
-											<!-- Piloto + Badges (Pole / VR) -->
-											<td class="py-3 px-4">
-												<div class="flex items-center gap-2.5">
-													<img src={res.piloto?.fotoPiloto} class="w-7 h-7 rounded-full object-cover border border-neutral-700" />
-													<div>
-														<span class="font-bold text-white block group-hover:text-red-400 transition-colors">
-															{res.piloto?.nombre}
-														</span>
-														<div class="flex gap-1 mt-0.5">
-															{res.esPole && <span class="bg-purple-950 text-purple-400 border border-purple-800 px-1 py-0.2 rounded text-[8px] font-bold">POLE</span>}
-															{res.esVueltaRapida && !res.dnf && <span class="bg-emerald-950 text-emerald-400 border border-emerald-800 px-1 py-0.2 rounded text-[8px] font-bold">VR</span>}
-														</div>
-													</div>
-												</div>
-											</td>
-
-											<!-- Escudería -->
-											<td class="py-3 px-4 text-gray-400">
-												<div class="flex items-center gap-1.5">
-													<span class="w-1.5 h-3 rounded-full" style={`background-color: ${res.piloto?.escuderia.colorHex}`}></span>
-													<span>{res.piloto?.escuderia.nombre}</span>
-												</div>
-											</td>
-
-											<!-- Paradas en Boxes -->
-											<td class="py-3 px-4 text-center font-bold text-gray-300">
-												{res.paradasBoxes}
-											</td>
-
-											<!-- Cambio de Alerón -->
-											<td class="py-3 px-4 text-center">
-												{res.cambioAleron ? (
-													<span class="text-yellow-500 font-bold bg-yellow-950/40 px-1.5 py-0.5 rounded border border-yellow-800/60 text-[10px]">
-														SÍ
-													</span>
-												) : (
-													<span class="text-gray-600">-</span>
-												)}
-											</td>
-
-											<!-- Compuestos Neumáticos Usados -->
-											<td class="py-3 px-4">
-												<div class="flex gap-1 text-[10px]">
-													{res.compuestosUsados?.map((comp: string) => (
-														<span class={`px-1.5 py-0.5 rounded font-bold border ${
-															comp === 'Soft' ? 'bg-red-950 text-red-400 border-red-800' :
-															comp === 'Medium' ? 'bg-yellow-950 text-yellow-400 border-yellow-800' :
-															'bg-neutral-800 text-white border-neutral-600'
-														}`}>
-															{comp[0]}
-														</span>
-													))}
-												</div>
-											</td>
-
-											<!-- Penalizaciones / Advertencias -->
-											<td class="py-3 px-4 text-gray-400 text-[11px]">
-												<div>
-													<span class={res.penalizaciones !== 'Sin sanciones' ? 'text-red-400 font-bold' : 'text-gray-500'}>
-														{res.penalizaciones}
-													</span>
-													{res.advertencias > 0 && (
-														<span class="block text-[10px] text-gray-500">
-															{res.advertencias} adv.
-														</span>
-													)}
-												</div>
-											</td>
-
-											<!-- Puntos Sumados -->
-											<td class="py-3 px-4 text-right font-black text-red-500 text-sm">
-												+{res.puntosFecha}
-											</td>
-
-										</tr>
-									))}
-								</tbody>
-							</table>
-						</div>
-					) : (
-						<div class="p-8 text-center font-mono text-xs text-gray-600">
-							Esta carrera aún no se ha disputado. Los datos de telemetría y clasificación aparecerán al finalizar la prueba.
-						</div>
-					)}
-
-				</div>
-			))}
-		</div>
-
-	</section>
+                                    <div class="space-y-3 pt-4">
+                                        <div class="flex items-center gap-2">
+                                            <span class="w-2 h-2 rounded-full bg-emerald-500"></span>
+                                            <h3 class="text-white font-black uppercase text-sm tracking-wider">Carrera 2 (Grilla Invertida - Top 8)</h3>
+                                        </div>
+                                        <div class="overflow-x-auto border border-neutral-800 rounded-xl">
+                                            <table class="w-full text-left font-mono text-xs">
+                                                <thead class="bg-black/60 text-gray-500 uppercase text-[10px] border-b border-neutral-800 tracking-wider">
+                                                    <tr>
+                                                        <th class="py-3.5 px-4 text-center">Pos</th>
+                                                        <th class="py-3.5 px-4">Piloto</th>
+                                                        <th class="py-3.5 px-4">Escudería</th>
+                                                        <th class="py-3.5 px-4 text-center">Stops</th>
+                                                        <th class="py-3.5 px-4 text-center">Alerón</th>
+                                                        <th class="py-3.5 px-4">Compuestos</th>
+                                                        <th class="py-3.5 px-4">Sanciones / Advert.</th>
+                                                        <th class="py-3.5 px-4 text-right">Puntos</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody class="divide-y divide-neutral-900/80">
+                                                    {fecha.resultadosC2.map((res: any) => (
+                                                        <tr class="hover:bg-neutral-900/50 transition-colors group">
+                                                            <td class="py-3 px-4 text-center font-bold text-sm">
+                                                                {res.dnf ? (
+                                                                    <span class="text-red-500 bg-red-950/60 px-2 py-0.5 rounded border border-red-900 text-[11px]" title={res.motivoDnf}>DNF</span>
+                                                                ) : (
+                                                                    <span class="text-white">#{res.posicion}</span>
+                                                                )}
+                                                            </td>
+                                                            <td class="py-3 px-4">
+                                                                <div class="flex items-center gap-2.5">
+                                                                    <img src={res.piloto?.fotoPiloto} class="w-7 h-7 rounded-full object-cover border border-neutral-700" />
+                                                                    <div>
+                                                                        <span class="font-bold text-white block group-hover:text-red-400 transition-colors">{res.piloto?.nombre}</span>
+                                                                        <div class="flex gap-1 mt-0.5">
+                                                                            {res.esVueltaRapida && !res.dnf && <span class="bg-emerald-950 text-emerald-400 border border-emerald-800 px-1 py-0.2 rounded text-[8px] font-bold">VR</span>}
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </td>
+                                                            <td class="py-3 px-4 text-gray-400">
+                                                                <div class="flex items-center gap-1.5">
+                                                                    <span class="w-1.5 h-3 rounded-full" style={`background-color: ${res.piloto?.escuderia.colorHex}`}></span>
+                                                                    <span>{res.piloto?.escuderia.nombre}</span>
+                                                                </div>
+                                                            </td>
+                                                            <td class="py-3 px-4 text-center font-bold text-gray-300">{res.paradasBoxes}</td>
+                                                            <td class="py-3 px-4 text-center">
+                                                                {res.cambioAleron ? <span class="text-yellow-500 font-bold bg-yellow-950/40 px-1.5 py-0.5 rounded border border-yellow-800/60 text-[10px]">SÍ</span> : <span class="text-gray-600">-</span>}
+                                                            </td>
+                                                            <td class="py-3 px-4">
+                                                                <div class="flex gap-1 text-[10px]">
+                                                                    {res.compuestosUsados?.map((comp: string) => (
+                                                                        <span class="px-1.5 py-0.5 rounded font-bold border bg-neutral-800 text-white border-neutral-600">{comp[0]}</span>
+                                                                    ))}
+                                                                </div>
+                                                            </td>
+                                                            <td class="py-3 px-4 text-gray-400 text-[11px]">
+                                                                <span class={res.penalizaciones !== 'Sin sanciones' ? 'text-red-400 font-bold' : 'text-gray-500'}>{res.penalizaciones}</span>
+                                                                {res.advertencias > 0 && <span class="block text-[10px] text-gray-500">{res.advertencias} adv.</span>}
+                                                            </td>
+                                                            <td class="py-3 px-4 text-right font-black text-red-500 text-sm">+{res.puntosFecha}</td>
+                                                        </tr>
+                                                    ))}
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    </div>
+                                </>
+                            ) : (
+                                <div class="overflow-x-auto">
+                                    <table class="w-full text-left font-mono text-xs">
+                                        <thead class="bg-black/60 text-gray-500 uppercase text-[10px] border-b border-neutral-800 tracking-wider">
+                                            <tr>
+                                                <th class="py-3.5 px-4 text-center">Pos</th>
+                                                <th class="py-3.5 px-4">Piloto</th>
+                                                <th class="py-3.5 px-4">Escudería</th>
+                                                <th class="py-3.5 px-4 text-center">Stops</th>
+                                                <th class="py-3.5 px-4 text-center">Alerón</th>
+                                                <th class="py-3.5 px-4">Compuestos</th>
+                                                <th class="py-3.5 px-4">Sanciones / Advert.</th>
+                                                <th class="py-3.5 px-4 text-right">Puntos</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody class="divide-y divide-neutral-900/80">
+                                            {fecha.resultados.map((res: any) => (
+                                                <tr class="hover:bg-neutral-900/50 transition-colors group">
+                                                    <td class="py-3 px-4 text-center font-bold text-sm">
+                                                        {res.dnf ? (
+                                                            <span class="text-red-500 bg-red-950/60 px-2 py-0.5 rounded border border-red-900 text-[11px]" title={res.motivoDnf}>DNF</span>
+                                                        ) : (
+                                                            <span class="text-white">#{res.posicion}</span>
+                                                        )}
+                                                    </td>
+                                                    <td class="py-3 px-4">
+                                                        <div class="flex items-center gap-2.5">
+                                                            <img src={res.piloto?.fotoPiloto} class="w-7 h-7 rounded-full object-cover border border-neutral-700" />
+                                                            <div>
+                                                                <span class="font-bold text-white block group-hover:text-red-400 transition-colors">{res.piloto?.nombre}</span>
+                                                                <div class="flex gap-1 mt-0.5">
+                                                                    {res.esPole && <span class="bg-purple-950 text-purple-400 border border-purple-800 px-1 py-0.2 rounded text-[8px] font-bold">POLE</span>}
+                                                                    {res.esVueltaRapida && !res.dnf && <span class="bg-emerald-950 text-emerald-400 border border-emerald-800 px-1 py-0.2 rounded text-[8px] font-bold">VR</span>}
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td class="py-3 px-4 text-gray-400">
+                                                        <div class="flex items-center gap-1.5">
+                                                            <span class="w-1.5 h-3 rounded-full" style={`background-color: ${res.piloto?.escuderia.colorHex}`}></span>
+                                                            <span>{res.piloto?.escuderia.nombre}</span>
+                                                        </div>
+                                                    </td>
+                                                    <td class="py-3 px-4 text-center font-bold text-gray-300">{res.paradasBoxes}</td>
+                                                    <td class="py-3 px-4 text-center">
+                                                        {res.cambioAleron ? <span class="text-yellow-500 font-bold bg-yellow-950/40 px-1.5 py-0.5 rounded border border-yellow-800/60 text-[10px]">SÍ</span> : <span class="text-gray-600">-</span>}
+                                                    </td>
+                                                    <td class="py-3 px-4">
+                                                        <div class="flex gap-1 text-[10px]">
+                                                            {res.compuestosUsados?.map((comp: string) => (
+                                                                <span class="px-1.5 py-0.5 rounded font-bold border bg-neutral-800 text-white border-neutral-600">{comp[0]}</span>
+                                                            ))}
+                                                        </div>
+                                                    </td>
+                                                    <td class="py-3 px-4 text-gray-400 text-[11px]">
+                                                        <span class={res.penalizaciones !== 'Sin sanciones' ? 'text-red-400 font-bold' : 'text-gray-500'}>{res.penalizaciones}</span>
+                                                        {res.advertencias > 0 && <span class="block text-[10px] text-gray-500">{res.advertencias} adv.</span>}
+                                                    </td>
+                                                    <td class="py-3 px-4 text-right font-black text-red-500 text-sm">+{res.puntosFecha}</td>
+                                                </tr>
+                                            ))}
+                                        </tbody>
+                                    </table>
+                                </div>
+                            )}
+                        </div>
+                    ) : (
+                        <div class="p-8 text-center font-mono text-xs text-gray-600">
+                            Esta carrera aún no se ha disputado. Los datos de telemetría y clasificación aparecerán al finalizar la prueba.
+                        </div>
+                    )}
+                </div>
+            ))}
+        </div>
+    </section>
 </Layout>

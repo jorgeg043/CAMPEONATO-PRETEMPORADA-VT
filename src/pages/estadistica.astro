@@ -18,24 +18,64 @@ const estadisticasPilotos = pilotosData.map((piloto) => {
     let totalAlerones = 0;
 
     carrerasCargadas.forEach((carrera: any) => {
-        const resultado = carrera.posiciones?.find((p: any) => p.pilotoId === piloto.id);
-        if (resultado) {
-            carrerasCorridas++;
-            if (resultado.dnf) dnfs++;
-            if (!resultado.dnf && resultado.posicion === 1) victorias++;
-            
-            // Sumamos puntos según posición (Top 10)
-            const PUNTOS = [0, 25, 18, 15, 12, 10, 8, 6, 4, 2, 1];
-            if (!resultado.dnf && resultado.posicion <= 10) {
-                puntosTotales += PUNTOS[resultado.posicion] || 0;
-            }
-
-            // Datos técnicos
-            totalParadas += (resultado.paradasBoxes || 0);
-            if (resultado.cambioAleron) totalAlerones++;
-        }
+        // --- POLE POSITION (Común para ambos formatos) ---
         if (carrera.polePosition?.pilotoId === piloto.id) polePositions++;
-        if (carrera.vueltaRapida?.pilotoId === piloto.id) vueltasRapidas++;
+
+        if (carrera.formato === 'doble') {
+            // ==========================================
+            // LÓGICA FECHA ESPECIAL (DOBLE CARRERA)
+            // ==========================================
+            const PUNTOS_F1 = [0, 25, 18, 15, 12, 10, 8, 6, 4, 2, 1];
+            const PUNTOS_CARRERA2 = [0, 8, 7, 6, 5, 4, 3, 2, 1];
+
+            // --- CARRERA 1 ---
+            const resC1 = carrera.carrera1?.posiciones?.find((p: any) => p.pilotoId === piloto.id);
+            if (resC1) {
+                carrerasCorridas++; // Cuenta como una carrera corrida
+                if (resC1.dnf) dnfs++;
+                if (!resC1.dnf && resC1.posicion === 1) victorias++;
+                if (!resC1.dnf && resC1.posicion <= 10) puntosTotales += PUNTOS_F1[resC1.posicion] || 0;
+                
+                totalParadas += (resC1.paradasBoxes || 0);
+                if (resC1.cambioAleron) totalAlerones++;
+            }
+            if (carrera.carrera1?.vueltaRapida?.pilotoId === piloto.id) vueltasRapidas++;
+
+            // --- CARRERA 2 ---
+            const resC2 = carrera.carrera2?.posiciones?.find((p: any) => p.pilotoId === piloto.id);
+            if (resC2) {
+                carrerasCorridas++; // Cuenta como OTRA carrera corrida
+                if (resC2.dnf) dnfs++;
+                if (!resC2.dnf && resC2.posicion === 1) victorias++;
+                if (!resC2.dnf && resC2.posicion <= 8) puntosTotales += PUNTOS_CARRERA2[resC2.posicion] || 0;
+
+                totalParadas += (resC2.paradasBoxes || 0);
+                if (resC2.cambioAleron) totalAlerones++;
+            }
+            if (carrera.carrera2?.vueltaRapida?.pilotoId === piloto.id) vueltasRapidas++;
+
+        } else {
+            // ==========================================
+            // LÓGICA CARRERA NORMAL
+            // ==========================================
+            const resultado = carrera.posiciones?.find((p: any) => p.pilotoId === piloto.id);
+            if (resultado) {
+                carrerasCorridas++;
+                if (resultado.dnf) dnfs++;
+                if (!resultado.dnf && resultado.posicion === 1) victorias++;
+                
+                // Sumamos puntos según posición (Top 10)
+                const PUNTOS = [0, 25, 18, 15, 12, 10, 8, 6, 4, 2, 1];
+                if (!resultado.dnf && resultado.posicion <= 10) {
+                    puntosTotales += PUNTOS[resultado.posicion] || 0;
+                }
+
+                // Datos técnicos
+                totalParadas += (resultado.paradasBoxes || 0);
+                if (resultado.cambioAleron) totalAlerones++;
+            }
+            if (carrera.vueltaRapida?.pilotoId === piloto.id) vueltasRapidas++;
+        }
     });
 
     // Puntos extra por Pole y VR
