@@ -3,13 +3,14 @@ import Layout from '../layouts/Layout.astro';
 import calendario from '../data/calendario.json';
 import pilotosData from '../data/pilotos.json';
 
-// 1. Lógica de separación: Próxima carrera vs Resto de la temporada
+// Lógica de separación: Próxima carrera vs Resto de la temporada
 const proximaCarrera = calendario.find((c) => c.estado === 'proxima') || calendario[0];
 const restoCarreras = calendario.filter((c) => c.numeroFecha !== proximaCarrera.numeroFecha);
 
-// 2. Carga dinámica de todas las fechas disputadas en /data/carreras/
+// Carga dinámica de todas las fechas disputadas en /data/carreras/
 const archivosCarreras = import.meta.glob('../data/carreras/*.json', { eager: true });
 const carrerasCargadas = Object.values(archivosCarreras).map((file: any) => file.default || file);
+---
 
 const PUNTOS_F1: Record<number, number> = { 1: 25, 2: 18, 3: 15, 4: 12, 5: 10, 6: 8, 7: 6, 8: 4, 9: 2, 10: 1 };
 
