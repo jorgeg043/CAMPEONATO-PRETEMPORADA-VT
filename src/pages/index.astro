@@ -1,73 +1,68 @@
 ---
 import Layout from '../layouts/Layout.astro';
 import calendario from '../data/calendario.json';
-import pilotos from '../data/pilotos.json';
+import pilotosData from '../data/pilotos.json';
 
-// Lógica de separación: Próxima carrera vs Resto de la temporada
+// 1. Lógica de separación: Próxima carrera vs Resto de la temporada
 const proximaCarrera = calendario.find((c) => c.estado === 'proxima') || calendario[0];
 const restoCarreras = calendario.filter((c) => c.numeroFecha !== proximaCarrera.numeroFecha);
 
-
-
-// --- INICIO CÓDIGO FRONTMATTER (Colocar arriba de todo en index.astro) ---
-import pilotosData from '../data/pilotos.json';
-
-// Carga dinámica de todas las fechas disputadas en /data/carreras/
+// 2. Carga dinámica de todas las fechas disputadas en /data/carreras/
 const archivosCarreras = import.meta.glob('../data/carreras/*.json', { eager: true });
 const carrerasCargadas = Object.values(archivosCarreras).map((file: any) => file.default || file);
 
 const PUNTOS_F1: Record<number, number> = { 1: 25, 2: 18, 3: 15, 4: 12, 5: 10, 6: 8, 7: 6, 8: 4, 9: 2, 10: 1 };
 
-// Procesamiento y cálculo automático de la tabla general
+// 3. Procesamiento y cálculo automático de la tabla general
 const tablaCampeonatoProcesada = pilotosData.map((piloto) => {
-	let puntosTotales = 0;
-	let victorias = 0;
-	let poles = 0;
+    let puntosTotales = 0;
+    let victorias = 0;
+    let poles = 0;
 
-	carrerasCargadas.forEach((carrera: any) => {
-		const resultado = carrera.posiciones?.find((p: any) => p.pilotoId === piloto.id);
-		const esPole = carrera.polePosition?.pilotoId === piloto.id;
-		const esVR = carrera.vueltaRapida?.pilotoId === piloto.id;
+    carrerasCargadas.forEach((carrera: any) => {
+        const resultado = carrera.posiciones?.find((p: any) => p.pilotoId === piloto.id);
+        const esPole = carrera.polePosition?.pilotoId === piloto.id;
+        const esVR = carrera.vueltaRapida?.pilotoId === piloto.id;
 
-		if (esPole) puntosTotales += 1;
+        if (esPole) puntosTotales += 1;
 
-		if (resultado && !resultado.dnf) {
-			if (resultado.posicion >= 1 && resultado.posicion <= 10) {
-				puntosTotales += PUNTOS_F1[resultado.posicion] || 0;
-			}
-			if (resultado.posicion === 1) victorias += 1;
-			if (esVR) puntosTotales += 1;
-		}
-	});
+        if (resultado && !resultado.dnf) {
+            if (resultado.posicion >= 1 && resultado.posicion <= 10) {
+                puntosTotales += PUNTOS_F1[resultado.posicion] || 0;
+            }
+            if (resultado.posicion === 1) victorias += 1;
+            if (esVR) puntosTotales += 1;
+        }
+    });
 
-	return {
-		...piloto,
-		puntosTotales,
-		victorias
-	};
+    return {
+        ...piloto,
+        puntosTotales,
+        victorias
+    };
 })
 .sort((a, b) => b.puntosTotales - a.puntosTotales || b.victorias - a.victorias)
 .map((piloto, index, lista) => {
-	const posicion = index + 1;
-	let difAdelante = 0;
-	let difAtras = 0;
+    const posicion = index + 1;
+    let difAdelante = 0;
+    let difAtras = 0;
 
-	if (index > 0) {
-		difAdelante = lista[index - 1].puntosTotales - piloto.puntosTotales;
-	}
-	if (index < lista.length - 1) {
-		difAtras = piloto.puntosTotales - lista[index + 1].puntosTotales;
-	}
+    if (index > 0) {
+        difAdelante = lista[index - 1].puntosTotales - piloto.puntosTotales;
+    }
+    if (index < lista.length - 1) {
+        difAtras = piloto.puntosTotales - lista[index + 1].puntosTotales;
+    }
 
-	return {
-		...piloto,
-		posicion,
-		difAdelante,
-		difAtras
-	};
+    return {
+        ...piloto,
+        posicion,
+        difAdelante,
+        difAtras
+    };
 });
 
-// --- PROCESAMIENTO COPA DE CONSTRUCTORES CON FOTOS DE PILOTOS ---
+// 4. Procesamiento Copa de Constructores
 const escuderiasProcesadas = pilotosData.reduce((acc: any[], piloto) => {
   const escuderiaId = piloto.escuderia.id;
   const pilotoProcesado = tablaCampeonatoProcesada.find(p => p.id === piloto.id);
@@ -101,7 +96,6 @@ const escuderiasProcesadas = pilotosData.reduce((acc: any[], piloto) => {
   return acc;
 }, []);
 
-// Ordenamiento y cálculo de diferencias
 const tablaConstructores = escuderiasProcesadas
   .sort((a, b) => b.puntosTotales - a.puntosTotales || b.victoriasTotales - a.victoriasTotales)
   .map((escuderia, index, lista) => {
@@ -123,515 +117,427 @@ const tablaConstructores = escuderiasProcesadas
       difAtras
     };
   });
-
-
-// --- FIN CÓDIGO FRONTMATTER ---
 ---
 
-
 <Layout>
-	<section class="max-w-6xl mx-auto px-4 py-8 space-y-16">
-		
-		<!-- TÍTULO PRINCIPAL DE LA PÁGINA -->
-		<div class="text-center pt-6 space-y-3">
-			<div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-red-950/60 border border-red-800/50 text-red-400 text-xs font-mono uppercase tracking-widest shadow-[0_0_15px_rgba(225,6,0,0.3)]">
-				<span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
-				Temporada Oficial 2026
-			</div>
-
-			<h1 class="text-4xl md:text-6xl font-black uppercase tracking-tighter">
-				<span class="bg-gradient-to-r from-red-500 via-red-600 to-red-400 bg-clip-text text-transparent drop-shadow-[0_0_35px_rgba(225,6,0,0.6)]">
-					Campeonato Pretemporada VT
-				</span>
-			</h1>
-			
-			<p class="text-gray-400 max-w-xl mx-auto text-sm md:text-base font-mono">
-				Portal oficial de la liga. Seguimiento en vivo de posiciones, constructores, calendario y telemetría de los pilotos.
-			</p>
-		</div>
-
-		<!-- (Acá continúan tu carrusel, próxima fecha, tablas de pilotos y constructores...) -->
-		
-
-
-
-
-
-
-
-
-
-
-		
-		
-
-		<!-- 2. TARJETA DESTACADA COMPLETA: PRÓXIMA CARRERA -->
-		<div class="relative bg-gradient-to-b from-[#140505] to-[#0a0a0a] rounded-3xl border border-red-600/70 p-6 md:p-10 shadow-[0_0_50px_rgba(225,6,0,0.25)] overflow-hidden">
-			<!-- Resplandor neón ambiental -->
-			<div class="absolute -top-24 -right-24 w-72 h-72 bg-red-600/20 rounded-full blur-3xl pointer-events-none"></div>
-
-			<!-- Cabecera de la Próxima Fecha -->
-			<div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8 border-b border-neutral-800/80 pb-6">
-				<div>
-					<span class="inline-block text-xs font-black uppercase tracking-widest px-3 py-1 rounded-full bg-red-600/20 text-red-400 border border-red-600/40 mb-2">
-						Próximo Evento • Fecha {proximaCarrera.numeroFecha}
-					</span>
-					<h2 class="text-3xl md:text-5xl font-black text-white uppercase tracking-tight flex items-center gap-3">
-						<span>{proximaCarrera.bandera}</span> {proximaCarrera.pais}
-					</h2>
-					<p class="text-gray-400 font-mono text-sm mt-1">{proximaCarrera.circuito}</p>
-				</div>
-				
-				<!-- Fecha y Hora -->
-				<div class="flex items-center gap-6 bg-black/60 px-6 py-3 rounded-2xl border border-neutral-800 font-mono">
-					<div>
-						<span class="block text-[10px] text-gray-500 uppercase">Fecha</span>
-						<span class="text-lg font-bold text-red-500">{proximaCarrera.fechaGranPremio}</span>
-					</div>
-					<div class="w-px h-8 bg-neutral-800"></div>
-					<div>
-						<span class="block text-[10px] text-gray-500 uppercase">Hora</span>
-						<span class="text-lg font-bold text-white">{proximaCarrera.hora} HS</span>
-					</div>
-				</div>
-			</div>
-
-			<!-- Cuerpo Principal: Imagen PNG + Telemetría y Compuestos -->
-			<div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center mb-6">
-				
-				<!-- Imagen del Circuito PNG -->
-				<div class="bg-black/80 rounded-2xl p-6 border border-neutral-900 flex justify-center items-center min-h-[200px]">
-					<img 
-						src={proximaCarrera.imagenCircuito} 
-						alt={proximaCarrera.circuito} 
-						class="max-h-48 object-contain filter drop-shadow-[0_0_12px_rgba(255,255,255,0.25)] hover:scale-105 transition-transform duration-300"
-						onerror="this.style.display='none'"
-					/>
-				</div>
-
-				<!-- Telemetría Técnica y Neumáticos -->
-				<div class="space-y-6">
-					
-					<!-- Ficha Técnica -->
-					<div>
-						<span class="block text-xs font-mono text-gray-500 uppercase mb-2">Especificaciones del Trazado</span>
-						<div class="grid grid-cols-3 gap-3 bg-neutral-900/60 p-4 rounded-xl border border-neutral-800 text-center font-mono">
-							<div>
-								<span class="block text-[10px] text-gray-500 uppercase">Longitud</span>
-								<span class="text-sm md:text-base font-bold text-white">{proximaCarrera.distanciaKm}</span>
-							</div>
-							<div class="border-x border-neutral-800">
-								<span class="block text-[10px] text-gray-500 uppercase">Curvas</span>
-								<span class="text-sm md:text-base font-bold text-white">{proximaCarrera.curvas}</span>
-							</div>
-							<div>
-								<span class="block text-[10px] text-gray-500 uppercase">Zonas DRS</span>
-								<span class="text-sm md:text-base font-bold text-red-500">{proximaCarrera.zonasDrs}</span>
-							</div>
-						</div>
-					</div>
-
-					<!-- Compuestos Neumáticos -->
-					<div>
-						<span class="block text-xs font-mono text-gray-500 uppercase mb-2">Compuestos de Neumáticos</span>
-						<div class="flex flex-wrap gap-3 font-mono text-xs">
-							<span class="px-3 py-1.5 rounded-lg bg-red-950/80 border border-red-600 text-red-400 font-bold flex items-center gap-2">
-								<span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
-								Blando: {proximaCarrera.compuestos.blando}
-							</span>
-							<span class="px-3 py-1.5 rounded-lg bg-yellow-950/80 border border-yellow-600 text-yellow-400 font-bold flex items-center gap-2">
-								<span class="w-2.5 h-2.5 rounded-full bg-yellow-500"></span>
-								Medio: {proximaCarrera.compuestos.medio}
-							</span>
-							<span class="px-3 py-1.5 rounded-lg bg-neutral-800 border border-neutral-600 text-gray-300 font-bold flex items-center gap-2">
-								<span class="w-2.5 h-2.5 rounded-full bg-white"></span>
-								Duro: {proximaCarrera.compuestos.duro}
-							</span>
-						</div>
-					</div>
-
-				</div>
-
-			</div>
-
-			<!-- Footer de Tarjeta Destacada -->
-			<div class="border-t border-neutral-800/80 pt-4 flex justify-between items-center text-xs font-mono text-gray-400">
-				<span>● Circuito Oficial F1</span>
-				<span class="text-red-400 bg-red-950/50 px-3 py-1 rounded border border-red-900/60">Estado: Confirmado</span>
-			</div>
-		</div>
-
-
-<!-- SECCIÓN: TABLA GENERAL DEL CAMPEONATO -->
-<div class="space-y-6">
-	<div class="flex justify-between items-end border-b border-neutral-800 pb-4">
-		<div>
-			<h3 class="text-2xl md:text-3xl font-black uppercase tracking-tight text-white">
-				Tabla General del <span class="text-red-600">Campeonato</span>
-			</h3>
-			<p class="text-gray-500 text-xs font-mono">Clasificación oficial de pilotos en vivo</p>
-		</div>
-		<span class="text-xs font-mono text-red-500 bg-red-950/60 border border-red-900/60 px-3 py-1 rounded-full uppercase">
-			● Actualizado
-		</span>
-	</div>
-
-	<div class="bg-[#0d0d0d] rounded-2xl border border-neutral-800 overflow-hidden shadow-[0_0_30px_rgba(0,0,0,0.8)]">
-		<div class="overflow-x-auto">
-			<table class="w-full text-left font-mono text-xs">
-				<thead class="bg-black/80 text-gray-400 uppercase text-[10px] border-b border-neutral-800 tracking-wider">
-					<tr>
-						<th class="py-4 px-4 text-center">Pos</th>
-						<th class="py-4 px-4">Piloto</th>
-						<th class="py-4 px-4 text-center">Escudería</th>
-						<th class="py-4 px-4 text-center">PTS</th>
-						<th class="py-4 px-4 text-center">Dif. Anterior</th>
-						<th class="py-4 px-4 text-center">Dif. Siguiente</th>
-					</tr>
-				</thead>
-				<tbody class="divide-y divide-neutral-900">
-					{tablaCampeonatoProcesada.map((item) => (
-						<tr class="hover:bg-neutral-900/60 transition-colors group">
-							
-							<!-- Posición 1 al 20 -->
-							<td class="py-3.5 px-4 text-center font-black text-sm">
-								<span class={`inline-block w-7 h-7 leading-7 rounded-lg ${
-									item.posicion === 1 ? 'bg-amber-500 text-black font-black shadow-[0_0_10px_rgba(245,158,11,0.5)]' :
-									item.posicion === 2 ? 'bg-slate-300 text-black font-black' :
-									item.posicion === 3 ? 'bg-amber-700 text-white font-black' :
-									'text-gray-400'
-								}`}>
-									{item.posicion}
-								</span>
-							</td>
-
-							<!-- Foto + Nombre del Piloto -->
-							<td class="py-3.5 px-4">
-								<div class="flex items-center gap-3">
-									<img 
-										src={item.fotoPiloto} 
-										alt={item.nombre} 
-										class="w-9 h-9 rounded-full object-cover border border-neutral-700 group-hover:border-red-600 transition-colors"
-										onerror="this.src='https://via.placeholder.com/150/000000/FFFFFF?text=F1'"
-									/>
-									<div>
-										<span class="font-bold text-white text-sm block group-hover:text-red-500 transition-colors uppercase">
-											{item.nombre}
-										</span>
-										<span class="text-[10px] text-gray-500 font-mono">#{item.numero}</span>
-									</div>
-								</div>
-							</td>
-
-							<!-- Solo Logo Ícono PNG de la Escudería -->
-							<td class="py-3.5 px-4 text-center">
-								<div class="flex justify-center items-center">
-									<img 
-										src={item.escuderia.logoEscuderia} 
-										alt={item.escuderia.nombre} 
-										title={item.escuderia.nombre}
-										class="h-7 w-7 object-contain filter drop-shadow-[0_0_4px_rgba(255,255,255,0.2)] hover:scale-110 transition-transform"
-										onerror="this.style.display='none'"
-									/>
-								</div>
-							</td>
-
-							<!-- Puntos Totales -->
-							<td class="py-3.5 px-4 text-center font-black text-base text-red-500">
-								{item.puntosTotales}
-							</td>
-
-							<!-- Diferencia con el Rival Anterior (Adelante) -->
-							<td class="py-3.5 px-4 text-center">
-								{item.posicion === 1 ? (
-									<span class="text-[10px] font-bold uppercase tracking-wider text-amber-400 bg-amber-950/60 border border-amber-800/80 px-2 py-0.5 rounded">
-										LÍDER
-									</span>
-								) : (
-									<span class="text-xs text-red-400 font-bold">
-										-{item.difAdelante} pts
-									</span>
-								)}
-							</td>
-
-							<!-- Diferencia con el Rival Siguiente (Atrás) -->
-							<td class="py-3.5 px-4 text-center">
-								{item.posicion === tablaCampeonatoProcesada.length ? (
-									<span class="text-xs text-gray-600">-</span>
-								) : (
-									<span class="text-xs text-emerald-400 font-bold">
-										+{item.difAtras} pts
-									</span>
-								)}
-							</td>
-
-						</tr>
-					))}
-				</tbody>
-			</table>
-		</div>
-	</div>
-</div>
-
-
-<!-- SECCIÓN: COPA DE CONSTRUCTORES / ESCUDERÍAS -->
-<div class="space-y-6">
-	<div class="flex justify-between items-end border-b border-neutral-800 pb-4">
-		<div>
-			<h3 class="text-2xl md:text-3xl font-black uppercase tracking-tight text-white">
-				Copa de <span class="text-red-600">Constructores</span>
-			</h3>
-			<p class="text-gray-500 text-xs font-mono">Clasificación oficial por equipos</p>
-		</div>
-		<span class="text-xs font-mono text-gray-400 bg-neutral-900 border border-neutral-800 px-3 py-1 rounded-full uppercase">
-			10 Escuderías
-		</span>
-	</div>
-
-	<div class="bg-[#0d0d0d] rounded-2xl border border-neutral-800 overflow-hidden shadow-[0_0_30px_rgba(0,0,0,0.8)]">
-		<div class="overflow-x-auto">
-			<table class="w-full text-left font-mono text-xs">
-				<thead class="bg-black/80 text-gray-400 uppercase text-[10px] border-b border-neutral-800 tracking-wider">
-					<tr>
-						<th class="py-4 px-4 text-center">Pos</th>
-						<th class="py-4 px-4">Escudería</th>
-						<th class="py-4 px-4 text-center">Pilotos</th>
-						<th class="py-4 px-4 text-center">PTS</th>
-						<th class="py-4 px-4 text-center">Dif. Anterior</th>
-						<th class="py-4 px-4 text-center">Dif. Siguiente</th>
-					</tr>
-				</thead>
-				<tbody class="divide-y divide-neutral-900">
-					{tablaConstructores.map((item) => (
-						<tr class="hover:bg-neutral-900/60 transition-colors group relative">
-							
-							<!-- Posición 1 al 10 -->
-							<td class="py-3.5 px-4 text-center font-black text-sm">
-								<span class={`inline-block w-7 h-7 leading-7 rounded-lg ${
-									item.posicion === 1 ? 'bg-amber-500 text-black font-black shadow-[0_0_10px_rgba(245,158,11,0.5)]' :
-									item.posicion === 2 ? 'bg-slate-300 text-black font-black' :
-									item.posicion === 3 ? 'bg-amber-700 text-white font-black' :
-									'text-gray-400'
-								}`}>
-									{item.posicion}
-								</span>
-							</td>
-
-							<!-- Logo + Nombre de Escudería -->
-							<td class="py-3.5 px-4">
-								<div class="flex items-center gap-3">
-									<span class="w-1.5 h-8 rounded-full shrink-0" style={`background-color: ${item.colorHex}`}></span>
-									<img 
-										src={item.logoEscuderia} 
-										alt={item.nombre} 
-										class="h-6 w-6 object-contain filter drop-shadow-[0_0_4px_rgba(255,255,255,0.2)]"
-										onerror="this.style.display='none'"
-									/>
-									<span class="font-bold text-white text-sm uppercase group-hover:text-red-500 transition-colors">
-										{item.nombre}
-									</span>
-								</div>
-							</td>
-
-							<!-- Fotos de los Pilotos del equipo -->
-							<td class="py-3.5 px-4 text-center">
-								<div class="flex justify-center items-center gap-2">
-									{item.pilotos.map((piloto: any) => (
-										<img 
-											src={piloto.fotoPiloto} 
-											alt={piloto.nombre} 
-											title={piloto.nombre}
-											class="w-8 h-8 rounded-full object-cover border-2 border-neutral-700 hover:border-red-500 hover:scale-110 transition-all cursor-pointer"
-											onerror="this.src='https://via.placeholder.com/150/000000/FFFFFF?text=F1'"
-										/>
-									))}
-								</div>
-							</td>
-
-							<!-- Puntos Totales Acumulados -->
-							<td class="py-3.5 px-4 text-center font-black text-base text-red-500">
-								{item.puntosTotales}
-							</td>
-
-							<!-- Diferencia con el Rival Anterior (Adelante) -->
-							<td class="py-3.5 px-4 text-center">
-								{item.posicion === 1 ? (
-									<span class="text-[10px] font-bold uppercase tracking-wider text-amber-400 bg-amber-950/60 border border-amber-800/80 px-2 py-0.5 rounded">
-										LÍDER
-									</span>
-								) : (
-									<span class="text-xs text-red-400 font-bold">
-										-{item.difAdelante} pts
-									</span>
-								)}
-							</td>
-
-							<!-- Diferencia con el Rival Siguiente (Atrás) -->
-							<td class="py-3.5 px-4 text-center">
-								{item.posicion === tablaConstructores.length ? (
-									<span class="text-xs text-gray-600">-</span>
-								) : (
-									<span class="text-xs text-emerald-400 font-bold">
-										+{item.difAtras} pts
-									</span>
-								)}
-							</td>
-
-						</tr>
-					))}
-				</tbody>
-			</table>
-		</div>
-	</div>
-</div>
-
-
-
-
-
-
-<!-- 2. CARRUSEL DE PILOTOS OFICIALES -->
-		<div class="space-y-6">
-			<div class="flex justify-between items-end border-b border-neutral-800 pb-4">
-				<div>
-					<h3 class="text-2xl md:text-3xl font-black uppercase tracking-tight text-white">
-						Parrilla de <span class="text-red-600">Pilotos</span>
-					</h3>
-					<p class="text-gray-500 text-xs font-mono">Los 20 competidores confirmados para la temporada</p>
-				</div>
-				<span class="hidden sm:block text-xs font-mono text-gray-500">Deslizá para ver más →</span>
-			</div>
-
-			<!-- Tira deslizable tipo carrusel -->
-			<div class="flex gap-5 overflow-x-auto pb-6 scrollbar-thin scrollbar-thumb-red-600 scrollbar-track-neutral-900 snap-x snap-mandatory">
-				{pilotos.map((piloto) => (
-					<div class="min-w-[260px] max-w-[260px] bg-[#0d0d0d] rounded-2xl border border-neutral-800 hover:border-red-600/60 transition-all duration-300 p-5 flex flex-col justify-between group relative overflow-hidden snap-start flex-shrink-0">
-						
-						<!-- Línea superior con el color distintivo del equipo -->
-						<div 
-							class="absolute top-0 left-0 right-0 h-1" 
-							style={`background-color: ${piloto.escuderia.colorHex}`}
-						></div>
-
-						<div>
-							<!-- Cabecera: Número y Logo de Escudería -->
-							<div class="flex justify-between items-center mb-3">
-								<span class="text-2xl font-black font-mono text-gray-500 group-hover:text-red-500 transition-colors">
-									#{piloto.numero}
-								</span>
-								<img 
-									src={piloto.escuderia.logoEscuderia} 
-									alt={piloto.escuderia.nombre} 
-									class="h-5 object-contain"
-									onerror="this.style.display='none'"
-								/>
-							</div>
-
-							<!-- Foto del Piloto -->
-							<div class="bg-black/60 rounded-xl p-2 border border-neutral-900 mb-4 flex justify-center items-center h-44 overflow-hidden">
-								<img 
-									src={piloto.fotoPiloto} 
-									alt={piloto.nombre} 
-									class="h-full object-cover group-hover:scale-105 transition-transform duration-300"
-									onerror="this.src='https://via.placeholder.com/150/000000/FFFFFF?text=F1'"
-								/>
-							</div>
-
-							<!-- Nombre y Escudería -->
-							<h4 class="text-lg font-black text-white uppercase tracking-tight truncate">
-								{piloto.nombre}
-							</h4>
-							<p class="text-xs font-mono text-gray-400 mb-4 truncate">
-								{piloto.escuderia.nombre}
-							</p>
-						</div>
-
-						<!-- Detalle Técnico y Redes -->
-						<div class="border-t border-neutral-800/80 pt-3 space-y-3 font-mono text-xs">
-							<div class="flex justify-between items-center">
-								<span class="text-gray-500 uppercase text-[10px]">Controles</span>
-								<span class={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
-									piloto.periferico === 'Simulador' 
-										? 'bg-red-950/80 text-red-400 border border-red-800' 
-										: 'bg-blue-950/80 text-blue-400 border border-blue-800'
-								}`}>
-									{piloto.periferico}
-								</span>
-							</div>
-
-							{piloto.instagram && (
-								<a 
-									href={piloto.instagram} 
-									target="_blank" 
-									rel="noopener noreferrer"
-									class="block text-center w-full py-1.5 bg-neutral-900 hover:bg-red-600/20 hover:border-red-600/40 border border-neutral-800 text-gray-300 hover:text-white rounded-lg transition-all duration-200 uppercase text-[10px] tracking-wider"
-								>
-									Instagram
-								</a>
-							)}
-						</div>
-
-					</div>
-				))}
-			</div>
-		</div>
-
-
-
-
-
-
-
-
-
-
-
-		<!-- 3. RESTO DEL CALENDARIO (GRILLA COMPACTA) -->
-		<div class="space-y-6">
-			<div class="border-b border-neutral-800 pb-4">
-				<h3 class="text-2xl md:text-3xl font-black uppercase tracking-tight text-white">
-					Próximas Fechas <span class="text-red-600">2026</span>
-				</h3>
-				<p class="text-gray-500 text-xs font-mono">Resto del calendario oficial de la temporada</p>
-			</div>
-
-			<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-				{restoCarreras.map((carrera) => (
-					<div class="bg-[#0c0c0c] hover:bg-[#121212] p-5 rounded-xl border border-neutral-800/80 hover:border-red-900/50 transition-all duration-300 group flex flex-col justify-between">
-						<div>
-							<div class="flex justify-between items-center mb-3">
-								<span class="text-[10px] font-mono text-gray-400 bg-neutral-900 px-2 py-0.5 rounded border border-neutral-800">
-									FECHA {carrera.numeroFecha}
-								</span>
-								<span class="text-xs font-mono text-gray-500">{carrera.fechaGranPremio}</span>
-							</div>
-
-							<div class="flex items-center gap-2 mb-1">
-								<span class="text-xl">{carrera.bandera}</span>
-								<h4 class="font-black text-lg text-white uppercase group-hover:text-red-500 transition-colors">
-									{carrera.pais}
-								</h4>
-							</div>
-
-							<p class="text-xs text-gray-400 font-mono truncate mb-4">{carrera.circuito}</p>
-						</div>
-
-						<!-- Mini datos de compuestos -->
-						<div class="flex gap-1.5 font-mono text-[10px] text-gray-400 border-t border-neutral-900 pt-3">
-							<span class="px-1.5 py-0.5 rounded bg-neutral-900 border border-neutral-800">
-								{carrera.compuestos.blando}
-							</span>
-							<span class="px-1.5 py-0.5 rounded bg-neutral-900 border border-neutral-800">
-								{carrera.compuestos.medio}
-							</span>
-							<span class="px-1.5 py-0.5 rounded bg-neutral-900 border border-neutral-800">
-								{carrera.compuestos.duro}
-							</span>
-						</div>
-					</div>
-				))}
-			</div>
-		</div>
-
-	</section>
+    <section class="max-w-6xl mx-auto px-4 py-8 space-y-16">
+        
+        <!-- TÍTULO PRINCIPAL DE LA PÁGINA -->
+        <div class="text-center pt-6 space-y-3">
+            <div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-red-950/60 border border-red-800/50 text-red-400 text-xs font-mono uppercase tracking-widest shadow-[0_0_15px_rgba(225,6,0,0.3)]">
+                <span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
+                Temporada Oficial 2026
+            </div>
+
+            <h1 class="text-4xl md:text-6xl font-black uppercase tracking-tighter">
+                <span class="bg-gradient-to-r from-red-500 via-red-600 to-red-400 bg-clip-text text-transparent drop-shadow-[0_0_35px_rgba(225,6,0,0.6)]">
+                    Campeonato Pretemporada VT
+                </span>
+            </h1>
+            
+            <p class="text-gray-400 max-w-xl mx-auto text-sm md:text-base font-mono">
+                Portal oficial de la liga. Seguimiento en vivo de posiciones, constructores, calendario y telemetría de los pilotos.
+            </p>
+        </div>
+
+        <!-- TARJETA DESTACADA COMPLETA: PRÓXIMA CARRERA -->
+        <div class="relative bg-gradient-to-b from-[#140505] to-[#0a0a0a] rounded-3xl border border-red-600/70 p-6 md:p-10 shadow-[0_0_50px_rgba(225,6,0,0.25)] overflow-hidden">
+            <div class="absolute -top-24 -right-24 w-72 h-72 bg-red-600/20 rounded-full blur-3xl pointer-events-none"></div>
+
+            <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-6 mb-8 border-b border-neutral-800/80 pb-6">
+                <div>
+                    <span class="inline-block text-xs font-black uppercase tracking-widest px-3 py-1 rounded-full bg-red-600/20 text-red-400 border border-red-600/40 mb-2">
+                        Próximo Evento • Fecha {proximaCarrera.numeroFecha}
+                    </span>
+                    <h2 class="text-3xl md:text-5xl font-black text-white uppercase tracking-tight flex items-center gap-3">
+                        <span>{proximaCarrera.bandera}</span> {proximaCarrera.pais}
+                    </h2>
+                    <p class="text-gray-400 font-mono text-sm mt-1">{proximaCarrera.circuito}</p>
+                </div>
+                
+                <div class="flex items-center gap-6 bg-black/60 px-6 py-3 rounded-2xl border border-neutral-800 font-mono">
+                    <div>
+                        <span class="block text-[10px] text-gray-500 uppercase">Fecha</span>
+                        <span class="text-lg font-bold text-red-500">{proximaCarrera.fechaGranPremio}</span>
+                    </div>
+                    <div class="w-px h-8 bg-neutral-800"></div>
+                    <div>
+                        <span class="block text-[10px] text-gray-500 uppercase">Hora</span>
+                        <span class="text-lg font-bold text-white">{proximaCarrera.hora} HS</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-center mb-6">
+                <div class="bg-black/80 rounded-2xl p-6 border border-neutral-900 flex justify-center items-center min-h-[200px]">
+                    <img 
+                        src={proximaCarrera.imagenCircuito} 
+                        alt={proximaCarrera.circuito} 
+                        class="max-h-48 object-contain filter drop-shadow-[0_0_12px_rgba(255,255,255,0.25)] hover:scale-105 transition-transform duration-300"
+                        onerror="this.style.display='none'"
+                    />
+                </div>
+
+                <div class="space-y-6">
+                    <div>
+                        <span class="block text-xs font-mono text-gray-500 uppercase mb-2">Especificaciones del Trazado</span>
+                        <div class="grid grid-cols-3 gap-3 bg-neutral-900/60 p-4 rounded-xl border border-neutral-800 text-center font-mono">
+                            <div>
+                                <span class="block text-[10px] text-gray-500 uppercase">Longitud</span>
+                                <span class="text-sm md:text-base font-bold text-white">{proximaCarrera.distanciaKm}</span>
+                            </div>
+                            <div class="border-x border-neutral-800">
+                                <span class="block text-[10px] text-gray-500 uppercase">Curvas</span>
+                                <span class="text-sm md:text-base font-bold text-white">{proximaCarrera.curvas}</span>
+                            </div>
+                            <div>
+                                <span class="block text-[10px] text-gray-500 uppercase">Zonas DRS</span>
+                                <span class="text-sm md:text-base font-bold text-red-500">{proximaCarrera.zonasDrs}</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div>
+                        <span class="block text-xs font-mono text-gray-500 uppercase mb-2">Compuestos de Neumáticos</span>
+                        <div class="flex flex-wrap gap-3 font-mono text-xs">
+                            <span class="px-3 py-1.5 rounded-lg bg-red-950/80 border border-red-600 text-red-400 font-bold flex items-center gap-2">
+                                <span class="w-2.5 h-2.5 rounded-full bg-red-500"></span>
+                                Blando: {proximaCarrera.compuestos.blando}
+                            </span>
+                            <span class="px-3 py-1.5 rounded-lg bg-yellow-950/80 border border-yellow-600 text-yellow-400 font-bold flex items-center gap-2">
+                                <span class="w-2.5 h-2.5 rounded-full bg-yellow-500"></span>
+                                Medio: {proximaCarrera.compuestos.medio}
+                            </span>
+                            <span class="px-3 py-1.5 rounded-lg bg-neutral-800 border border-neutral-600 text-gray-300 font-bold flex items-center gap-2">
+                                <span class="w-2.5 h-2.5 rounded-full bg-white"></span>
+                                Duro: {proximaCarrera.compuestos.duro}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="border-t border-neutral-800/80 pt-4 flex justify-between items-center text-xs font-mono text-gray-400">
+                <span>● Circuito Oficial F1</span>
+                <span class="text-red-400 bg-red-950/50 px-3 py-1 rounded border border-red-900/60">Estado: Confirmado</span>
+            </div>
+        </div>
+
+        <!-- SECCIÓN: TABLA GENERAL DEL CAMPEONATO -->
+        <div class="space-y-6">
+            <div class="flex justify-between items-end border-b border-neutral-800 pb-4">
+                <div>
+                    <h3 class="text-2xl md:text-3xl font-black uppercase tracking-tight text-white">
+                        Tabla General del <span class="text-red-600">Campeonato</span>
+                    </h3>
+                    <p class="text-gray-500 text-xs font-mono">Clasificación oficial de pilotos en vivo</p>
+                </div>
+                <span class="text-xs font-mono text-red-500 bg-red-950/60 border border-red-900/60 px-3 py-1 rounded-full uppercase">
+                    ● Actualizado
+                </span>
+            </div>
+
+            <div class="bg-[#0d0d0d] rounded-2xl border border-neutral-800 overflow-hidden shadow-[0_0_30px_rgba(0,0,0,0.8)]">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left font-mono text-xs">
+                        <thead class="bg-black/80 text-gray-400 uppercase text-[10px] border-b border-neutral-800 tracking-wider">
+                            <tr>
+                                <th class="py-4 px-4 text-center">Pos</th>
+                                <th class="py-4 px-4">Piloto</th>
+                                <th class="py-4 px-4 text-center">Escudería</th>
+                                <th class="py-4 px-4 text-center">PTS</th>
+                                <th class="py-4 px-4 text-center">Dif. Anterior</th>
+                                <th class="py-4 px-4 text-center">Dif. Siguiente</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-neutral-900">
+                            {tablaCampeonatoProcesada.map((item) => (
+                                <tr class="hover:bg-neutral-900/60 transition-colors group">
+                                    <td class="py-3.5 px-4 text-center font-black text-sm">
+                                        <span class={`inline-block w-7 h-7 leading-7 rounded-lg ${
+                                            item.posicion === 1 ? 'bg-amber-500 text-black font-black shadow-[0_0_10px_rgba(245,158,11,0.5)]' :
+                                            item.posicion === 2 ? 'bg-slate-300 text-black font-black' :
+                                            item.posicion === 3 ? 'bg-amber-700 text-white font-black' :
+                                            'text-gray-400'
+                                        }`}>
+                                            {item.posicion}
+                                        </span>
+                                    </td>
+                                    <td class="py-3.5 px-4">
+                                        <div class="flex items-center gap-3">
+                                            <img 
+                                                src={item.fotoPiloto} 
+                                                alt={item.nombre} 
+                                                class="w-9 h-9 rounded-full object-cover border border-neutral-700 group-hover:border-red-600 transition-colors"
+                                                onerror="this.src='https://via.placeholder.com/150/000000/FFFFFF?text=F1'"
+                                            />
+                                            <div>
+                                                <span class="font-bold text-white text-sm block group-hover:text-red-500 transition-colors uppercase">
+                                                    {item.nombre}
+                                                </span>
+                                                <span class="text-[10px] text-gray-500 font-mono">#{item.numero}</span>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="py-3.5 px-4 text-center">
+                                        <div class="flex justify-center items-center">
+                                            <img 
+                                                src={item.escuderia.logoEscuderia} 
+                                                alt={item.escuderia.nombre} 
+                                                title={item.escuderia.nombre}
+                                                class="h-7 w-7 object-contain filter drop-shadow-[0_0_4px_rgba(255,255,255,0.2)] hover:scale-110 transition-transform"
+                                                onerror="this.style.display='none'"
+                                            />
+                                        </div>
+                                    </td>
+                                    <td class="py-3.5 px-4 text-center font-black text-base text-red-500">
+                                        {item.puntosTotales}
+                                    </td>
+                                    <td class="py-3.5 px-4 text-center">
+                                        {item.posicion === 1 ? (
+                                            <span class="text-[10px] font-bold uppercase tracking-wider text-amber-400 bg-amber-950/60 border border-amber-800/80 px-2 py-0.5 rounded">
+                                                LÍDER
+                                            </span>
+                                        ) : (
+                                            <span class="text-xs text-red-400 font-bold">
+                                                -{item.difAdelante} pts
+                                            </span>
+                                        )}
+                                    </td>
+                                    <td class="py-3.5 px-4 text-center">
+                                        {item.posicion === tablaCampeonatoProcesada.length ? (
+                                            <span class="text-xs text-gray-600">-</span>
+                                        ) : (
+                                            <span class="text-xs text-emerald-400 font-bold">
+                                                +{item.difAtras} pts
+                                            </span>
+                                        )}
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        <!-- SECCIÓN: COPA DE CONSTRUCTORES / ESCUDERÍAS -->
+        <div class="space-y-6">
+            <div class="flex justify-between items-end border-b border-neutral-800 pb-4">
+                <div>
+                    <h3 class="text-2xl md:text-3xl font-black uppercase tracking-tight text-white">
+                        Copa de <span class="text-red-600">Constructores</span>
+                    </h3>
+                    <p class="text-gray-500 text-xs font-mono">Clasificación oficial por equipos</p>
+                </div>
+                <span class="text-xs font-mono text-gray-400 bg-neutral-900 border border-neutral-800 px-3 py-1 rounded-full uppercase">
+                    10 Escuderías
+                </span>
+            </div>
+
+            <div class="bg-[#0d0d0d] rounded-2xl border border-neutral-800 overflow-hidden shadow-[0_0_30px_rgba(0,0,0,0.8)]">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left font-mono text-xs">
+                        <thead class="bg-black/80 text-gray-400 uppercase text-[10px] border-b border-neutral-800 tracking-wider">
+                            <tr>
+                                <th class="py-4 px-4 text-center">Pos</th>
+                                <th class="py-4 px-4">Escudería</th>
+                                <th class="py-4 px-4 text-center">Pilotos</th>
+                                <th class="py-4 px-4 text-center">PTS</th>
+                                <th class="py-4 px-4 text-center">Dif. Anterior</th>
+                                <th class="py-4 px-4 text-center">Dif. Siguiente</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-neutral-900">
+                            {tablaConstructores.map((item) => (
+                                <tr class="hover:bg-neutral-900/60 transition-colors group relative">
+                                    <td class="py-3.5 px-4 text-center font-black text-sm">
+                                        <span class={`inline-block w-7 h-7 leading-7 rounded-lg ${
+                                            item.posicion === 1 ? 'bg-amber-500 text-black font-black shadow-[0_0_10px_rgba(245,158,11,0.5)]' :
+                                            item.posicion === 2 ? 'bg-slate-300 text-black font-black' :
+                                            item.posicion === 3 ? 'bg-amber-700 text-white font-black' :
+                                            'text-gray-400'
+                                        }`}>
+                                            {item.posicion}
+                                        </span>
+                                    </td>
+                                    <td class="py-3.5 px-4">
+                                        <div class="flex items-center gap-3">
+                                            <span class="w-1.5 h-8 rounded-full shrink-0" style={`background-color: ${item.colorHex}`}></span>
+                                            <img 
+                                                src={item.logoEscuderia} 
+                                                alt={item.nombre} 
+                                                class="h-6 w-6 object-contain filter drop-shadow-[0_0_4px_rgba(255,255,255,0.2)]"
+                                                onerror="this.style.display='none'"
+                                            />
+                                            <span class="font-bold text-white text-sm uppercase group-hover:text-red-500 transition-colors">
+                                                {item.nombre}
+                                            </span>
+                                        </div>
+                                    </td>
+                                    <td class="py-3.5 px-4 text-center">
+                                        <div class="flex justify-center items-center gap-2">
+                                            {item.pilotos.map((piloto: any) => (
+                                                <img 
+                                                    src={piloto.fotoPiloto} 
+                                                    alt={piloto.nombre} 
+                                                    title={piloto.nombre}
+                                                    class="w-8 h-8 rounded-full object-cover border-2 border-neutral-700 hover:border-red-500 hover:scale-110 transition-all cursor-pointer"
+                                                    onerror="this.src='https://via.placeholder.com/150/000000/FFFFFF?text=F1'"
+                                                />
+                                            ))}
+                                        </div>
+                                    </td>
+                                    <td class="py-3.5 px-4 text-center font-black text-base text-red-500">
+                                        {item.puntosTotales}
+                                    </td>
+                                    <td class="py-3.5 px-4 text-center">
+                                        {item.posicion === 1 ? (
+                                            <span class="text-[10px] font-bold uppercase tracking-wider text-amber-400 bg-amber-950/60 border border-amber-800/80 px-2 py-0.5 rounded">
+                                                LÍDER
+                                            </span>
+                                        ) : (
+                                            <span class="text-xs text-red-400 font-bold">
+                                                -{item.difAdelante} pts
+                                            </span>
+                                        )}
+                                    </td>
+                                    <td class="py-3.5 px-4 text-center">
+                                        {item.posicion === tablaConstructores.length ? (
+                                            <span class="text-xs text-gray-600">-</span>
+                                        ) : (
+                                            <span class="text-xs text-emerald-400 font-bold">
+                                                +{item.difAtras} pts
+                                            </span>
+                                        )}
+                                    </td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+
+        {/* CARRUSEL DE PILOTOS OFICIALES */}
+        <div class="space-y-6">
+            <div class="flex justify-between items-end border-b border-neutral-800 pb-4">
+                <div>
+                    <h3 class="text-2xl md:text-3xl font-black uppercase tracking-tight text-white">
+                        Parrilla de <span class="text-red-600">Pilotos</span>
+                    </h3>
+                    <p class="text-gray-500 text-xs font-mono">Los 20 competidores confirmados para la temporada</p>
+                </div>
+                <span class="hidden sm:block text-xs font-mono text-gray-500">Deslizá para ver más →</span>
+            </div>
+
+            <div class="flex gap-5 overflow-x-auto pb-6 scrollbar-thin scrollbar-thumb-red-600 scrollbar-track-neutral-900 snap-x snap-mandatory">
+                {pilotosData.map((piloto) => (
+                    <div class="min-w-[260px] max-w-[260px] bg-[#0d0d0d] rounded-2xl border border-neutral-800 hover:border-red-600/60 transition-all duration-300 p-5 flex flex-col justify-between group relative overflow-hidden snap-start flex-shrink-0">
+                        <div class="absolute top-0 left-0 right-0 h-1" style={`background-color: ${piloto.escuderia.colorHex}`}></div>
+                        <div>
+                            <div class="flex justify-between items-center mb-3">
+                                <span class="text-2xl font-black font-mono text-gray-500 group-hover:text-red-500 transition-colors">
+                                    #{piloto.numero}
+                                </span>
+                                <img 
+                                    src={piloto.escuderia.logoEscuderia} 
+                                    alt={piloto.escuderia.nombre} 
+                                    class="h-5 object-contain"
+                                    onerror="this.style.display='none'"
+                                />
+                            </div>
+
+                            <div class="bg-black/60 rounded-xl p-2 border border-neutral-900 mb-4 flex justify-center items-center h-44 overflow-hidden">
+                                <img 
+                                    src={piloto.fotoPiloto} 
+                                    alt={piloto.nombre} 
+                                    class="h-full object-cover group-hover:scale-105 transition-transform duration-300"
+                                    onerror="this.src='https://via.placeholder.com/150/000000/FFFFFF?text=F1'"
+                                />
+                            </div>
+
+                            <h4 class="text-lg font-black text-white uppercase tracking-tight truncate">
+                                {piloto.nombre}
+                            </h4>
+                            <p class="text-xs font-mono text-gray-400 mb-4 truncate">
+                                {piloto.escuderia.nombre}
+                            </p>
+                        </div>
+
+                        <div class="border-t border-neutral-800/80 pt-3 space-y-3 font-mono text-xs">
+                            <div class="flex justify-between items-center">
+                                <span class="text-gray-500 uppercase text-[10px]">Controles</span>
+                                <span class={`px-2 py-0.5 rounded text-[10px] font-bold uppercase ${
+                                    piloto.periferico === 'Simulador' 
+                                        ? 'bg-red-950/80 text-red-400 border border-red-800' 
+                                        : 'bg-blue-950/80 text-blue-400 border border-blue-800'
+                                }`}>
+                                    {piloto.periferico}
+                                </span>
+                            </div>
+
+                            {piloto.instagram && (
+                                <a 
+                                    href={piloto.instagram} 
+                                    target="_blank" 
+                                    rel="noopener noreferrer"
+                                    class="block text-center w-full py-1.5 bg-neutral-900 hover:bg-red-600/20 hover:border-red-600/40 border border-neutral-800 text-gray-300 hover:text-white rounded-lg transition-all duration-200 uppercase text-[10px] tracking-wider"
+                                >
+                                    Instagram
+                                </a>
+                            )}
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+
+        <!-- RESTO DEL CALENDARIO -->
+        <div class="space-y-6">
+            <div class="border-b border-neutral-800 pb-4">
+                <h3 class="text-2xl md:text-3xl font-black uppercase tracking-tight text-white">
+                    Próximas Fechas <span class="text-red-600">2026</span>
+                </h3>
+                <p class="text-gray-500 text-xs font-mono">Resto del calendario oficial de la temporada</p>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                {restoCarreras.map((carrera) => (
+                    <div class="bg-[#0c0c0c] hover:bg-[#121212] p-5 rounded-xl border border-neutral-800/80 hover:border-red-900/50 transition-all duration-300 group flex flex-col justify-between">
+                        <div>
+                            <div class="flex justify-between items-center mb-3">
+                                <span class="text-[10px] font-mono text-gray-400 bg-neutral-900 px-2 py-0.5 rounded border border-neutral-800">
+                                    FECHA {carrera.numeroFecha}
+                                </span>
+                                <span class="text-xs font-mono text-gray-500">{carrera.fechaGranPremio}</span>
+                            </div>
+
+                            <div class="flex items-center gap-2 mb-1">
+                                <span class="text-xl">{carrera.bandera}</span>
+                                <h4 class="font-black text-lg text-white uppercase group-hover:text-red-500 transition-colors">
+                                    {carrera.pais}
+                                </h4>
+                            </div>
+
+                            <p class="text-xs text-gray-400 font-mono truncate mb-4">{carrera.circuito}</p>
+                        </div>
+
+                        <div class="flex gap-1.5 font-mono text-[10px] text-gray-400 border-t border-neutral-900 pt-3">
+                            <span class="px-1.5 py-0.5 rounded bg-neutral-900 border border-neutral-800">
+                                {carrera.compuestos.blando}
+                            </span>
+                            <span class="px-1.5 py-0.5 rounded bg-neutral-900 border border-neutral-800">
+                                {carrera.compuestos.medio}
+                            </span>
+                            <span class="px-1.5 py-0.5 rounded bg-neutral-900 border border-neutral-800">
+                                {carrera.compuestos.duro}
+                            </span>
+                        </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+
+    </section>
 </Layout>
