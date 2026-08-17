@@ -6,42 +6,165 @@ import pilotos from '../data/pilotos.json';
 // Lógica de separación: Próxima carrera vs Resto de la temporada
 const proximaCarrera = calendario.find((c) => c.estado === 'proxima') || calendario[0];
 const restoCarreras = calendario.filter((c) => c.numeroFecha !== proximaCarrera.numeroFecha);
+// --- INICIO CÓDIGO FRONTMATTER (Colocar arriba de todo en index.astro) ---
+import pilotosData from '../data/pilotos.json';
+
+
+// --- INICIO CÓDIGO FRONTMATTER (Colocar arriba de todo en index.astro) ---
+import pilotosData from '../data/pilotos.json';
+
+// Carga dinámica de todas las fechas disputadas en /data/carreras/
+const archivosCarreras = import.meta.glob('../data/carreras/*.json', { eager: true });
+const carrerasCargadas = Object.values(archivosCarreras).map((file: any) => file.default || file);
+
+const PUNTOS_F1: Record<number, number> = { 1: 25, 2: 18, 3: 15, 4: 12, 5: 10, 6: 8, 7: 6, 8: 4, 9: 2, 10: 1 };
+
+// Procesamiento y cálculo automático de la tabla general
+const tablaCampeonatoProcesada = pilotosData.map((piloto) => {
+	let puntosTotales = 0;
+	let victorias = 0;
+	let poles = 0;
+
+	carrerasCargadas.forEach((carrera: any) => {
+		const resultado = carrera.posiciones?.find((p: any) => p.pilotoId === piloto.id);
+		const esPole = carrera.polePosition?.pilotoId === piloto.id;
+		const esVR = carrera.vueltaRapida?.pilotoId === piloto.id;
+
+		if (esPole) puntosTotales += 1;
+
+		if (resultado && !resultado.dnf) {
+			if (resultado.posicion >= 1 && resultado.posicion <= 10) {
+				puntosTotales += PUNTOS_F1[resultado.posicion] || 0;
+			}
+			if (resultado.posicion === 1) victorias += 1;
+			if (esVR) puntosTotales += 1;
+		}
+	});
+
+	return {
+		...piloto,
+		puntosTotales,
+		victorias
+	};
+})
+.sort((a, b) => b.puntosTotales - a.puntosTotales || b.victorias - a.victorias)
+.map((piloto, index, lista) => {
+	const posicion = index + 1;
+	let difAdelante = 0;
+	let difAtras = 0;
+
+	if (index > 0) {
+		difAdelante = lista[index - 1].puntosTotales - piloto.puntosTotales;
+	}
+	if (index < lista.length - 1) {
+		difAtras = piloto.puntosTotales - lista[index + 1].puntosTotales;
+	}
+
+	return {
+		...piloto,
+		posicion,
+		difAdelante,
+		difAtras
+	};
+});
+
+// --- PROCESAMIENTO COPA DE CONSTRUCTORES CON FOTOS DE PILOTOS ---
+const escuderiasProcesadas = pilotosData.reduce((acc: any[], piloto) => {
+  const escuderiaId = piloto.escuderia.id;
+  const pilotoProcesado = tablaCampeonatoProcesada.find(p => p.id === piloto.id);
+  const puntosPiloto = pilotoProcesado ? pilotoProcesado.puntosTotales : 0;
+  const victoriasPiloto = pilotoProcesado ? pilotoProcesado.victorias : 0;
+
+  const escuderiaExistente = acc.find(e => e.id === escuderiaId);
+
+  if (escuderiaExistente) {
+    escuderiaExistente.puntosTotales += puntosPiloto;
+    escuderiaExistente.victoriasTotales += victoriasPiloto;
+    escuderiaExistente.pilotos.push({
+      nombre: piloto.nombre,
+      fotoPiloto: piloto.fotoPiloto
+    });
+  } else {
+    acc.push({
+      id: escuderiaId,
+      nombre: piloto.escuderia.nombre,
+      logoEscuderia: piloto.escuderia.logoEscuderia,
+      colorHex: piloto.escuderia.colorHex,
+      puntosTotales: puntosPiloto,
+      victoriasTotales: victoriasPiloto,
+      pilotos: [{
+        nombre: piloto.nombre,
+        fotoPiloto: piloto.fotoPiloto
+      }]
+    });
+  }
+
+  return acc;
+}, []);
+
+// Ordenamiento y cálculo de diferencias
+const tablaConstructores = escuderiasProcesadas
+  .sort((a, b) => b.puntosTotales - a.puntosTotales || b.victoriasTotales - a.victoriasTotales)
+  .map((escuderia, index, lista) => {
+    const posicion = index + 1;
+    let difAdelante = 0;
+    let difAtras = 0;
+
+    if (index > 0) {
+      difAdelante = lista[index - 1].puntosTotales - escuderia.puntosTotales;
+    }
+    if (index < lista.length - 1) {
+      difAtras = escuderia.puntosTotales - lista[index + 1].puntosTotales;
+    }
+
+    return {
+      ...escuderia,
+      posicion,
+      difAdelante,
+      difAtras
+    };
+  });
+
+
+// --- FIN CÓDIGO FRONTMATTER ---
 ---
+
 
 <Layout>
 	<section class="max-w-6xl mx-auto px-4 py-8 space-y-16">
 		
-		<!-- 1. HERO SECTION & BOTÓN INSCRIPCIÓN -->
-		<div class="flex flex-col items-center justify-center text-center pt-6">
-			<div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-red-950/60 border border-red-800/50 text-red-400 text-xs font-mono uppercase tracking-widest mb-6 shadow-[0_0_15px_rgba(225,6,0,0.3)]">
+		<!-- TÍTULO PRINCIPAL DE LA PÁGINA -->
+		<div class="text-center pt-6 space-y-3">
+			<div class="inline-flex items-center gap-2 px-3.5 py-1 rounded-full bg-red-950/60 border border-red-800/50 text-red-400 text-xs font-mono uppercase tracking-widest shadow-[0_0_15px_rgba(225,6,0,0.3)]">
 				<span class="w-2 h-2 rounded-full bg-red-500 animate-ping"></span>
 				Temporada Oficial 2026
 			</div>
 
-			<h1 class="text-5xl md:text-7xl font-black uppercase tracking-tighter mb-4">
+			<h1 class="text-4xl md:text-6xl font-black uppercase tracking-tighter">
 				<span class="bg-gradient-to-r from-red-500 via-red-600 to-red-400 bg-clip-text text-transparent drop-shadow-[0_0_35px_rgba(225,6,0,0.6)]">
-					Bienvenidos al
-				</span>
-				<br />
-				<span class="text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.7)]">
 					Campeonato Pretemporada VT
 				</span>
 			</h1>
 			
-			<p class="text-gray-400 max-w-2xl text-base md:text-lg mb-8 font-mono">
-				La grilla de salida está lista. Reservá tu lugar y demostrá quién manda en la pista antes del inicio de la temporada.
+			<p class="text-gray-400 max-w-xl mx-auto text-sm md:text-base font-mono">
+				Portal oficial de la liga. Seguimiento en vivo de posiciones, constructores, calendario y telemetría de los pilotos.
 			</p>
-
-			<!-- Botón Google Forms -->
-			<a 
-				href="https://docs.google.com/forms/d/e/1FAIpQLSebFbwAJF2RS-SAx8WFCUnn6lPf55tsH5Q9Z6eWEGg1FNB07w/viewform?usp=publish-editor" 
-				target="_blank" 
-				rel="noopener noreferrer"
-				class="bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-black py-4 px-8 rounded-xl transition-all duration-300 text-lg uppercase tracking-widest shadow-[0_0_25px_rgba(225,6,0,0.6)] hover:shadow-[0_0_40px_rgba(225,6,0,0.9)] hover:-translate-y-1"
-			>
-				Completar Formulario
-			</a>
 		</div>
+
+		<!-- (Acá continúan tu carrusel, próxima fecha, tablas de pilotos y constructores...) -->
+		
+
+
+
+
+
+
+
+
+
+
+		
+		
 
 		<!-- 2. TARJETA DESTACADA COMPLETA: PRÓXIMA CARRERA -->
 		<div class="relative bg-gradient-to-b from-[#140505] to-[#0a0a0a] rounded-3xl border border-red-600/70 p-6 md:p-10 shadow-[0_0_50px_rgba(225,6,0,0.25)] overflow-hidden">
@@ -138,6 +261,234 @@ const restoCarreras = calendario.filter((c) => c.numeroFecha !== proximaCarrera.
 				<span class="text-red-400 bg-red-950/50 px-3 py-1 rounded border border-red-900/60">Estado: Confirmado</span>
 			</div>
 		</div>
+
+
+<!-- SECCIÓN: TABLA GENERAL DEL CAMPEONATO -->
+<div class="space-y-6">
+	<div class="flex justify-between items-end border-b border-neutral-800 pb-4">
+		<div>
+			<h3 class="text-2xl md:text-3xl font-black uppercase tracking-tight text-white">
+				Tabla General del <span class="text-red-600">Campeonato</span>
+			</h3>
+			<p class="text-gray-500 text-xs font-mono">Clasificación oficial de pilotos en vivo</p>
+		</div>
+		<span class="text-xs font-mono text-red-500 bg-red-950/60 border border-red-900/60 px-3 py-1 rounded-full uppercase">
+			● Actualizado
+		</span>
+	</div>
+
+	<div class="bg-[#0d0d0d] rounded-2xl border border-neutral-800 overflow-hidden shadow-[0_0_30px_rgba(0,0,0,0.8)]">
+		<div class="overflow-x-auto">
+			<table class="w-full text-left font-mono text-xs">
+				<thead class="bg-black/80 text-gray-400 uppercase text-[10px] border-b border-neutral-800 tracking-wider">
+					<tr>
+						<th class="py-4 px-4 text-center">Pos</th>
+						<th class="py-4 px-4">Piloto</th>
+						<th class="py-4 px-4 text-center">Escudería</th>
+						<th class="py-4 px-4 text-center">PTS</th>
+						<th class="py-4 px-4 text-center">Dif. Anterior</th>
+						<th class="py-4 px-4 text-center">Dif. Siguiente</th>
+					</tr>
+				</thead>
+				<tbody class="divide-y divide-neutral-900">
+					{tablaCampeonatoProcesada.map((item) => (
+						<tr class="hover:bg-neutral-900/60 transition-colors group">
+							
+							<!-- Posición 1 al 20 -->
+							<td class="py-3.5 px-4 text-center font-black text-sm">
+								<span class={`inline-block w-7 h-7 leading-7 rounded-lg ${
+									item.posicion === 1 ? 'bg-amber-500 text-black font-black shadow-[0_0_10px_rgba(245,158,11,0.5)]' :
+									item.posicion === 2 ? 'bg-slate-300 text-black font-black' :
+									item.posicion === 3 ? 'bg-amber-700 text-white font-black' :
+									'text-gray-400'
+								}`}>
+									{item.posicion}
+								</span>
+							</td>
+
+							<!-- Foto + Nombre del Piloto -->
+							<td class="py-3.5 px-4">
+								<div class="flex items-center gap-3">
+									<img 
+										src={item.fotoPiloto} 
+										alt={item.nombre} 
+										class="w-9 h-9 rounded-full object-cover border border-neutral-700 group-hover:border-red-600 transition-colors"
+										onerror="this.src='https://via.placeholder.com/150/000000/FFFFFF?text=F1'"
+									/>
+									<div>
+										<span class="font-bold text-white text-sm block group-hover:text-red-500 transition-colors uppercase">
+											{item.nombre}
+										</span>
+										<span class="text-[10px] text-gray-500 font-mono">#{item.numero}</span>
+									</div>
+								</div>
+							</td>
+
+							<!-- Solo Logo Ícono PNG de la Escudería -->
+							<td class="py-3.5 px-4 text-center">
+								<div class="flex justify-center items-center">
+									<img 
+										src={item.escuderia.logoEscuderia} 
+										alt={item.escuderia.nombre} 
+										title={item.escuderia.nombre}
+										class="h-7 w-7 object-contain filter drop-shadow-[0_0_4px_rgba(255,255,255,0.2)] hover:scale-110 transition-transform"
+										onerror="this.style.display='none'"
+									/>
+								</div>
+							</td>
+
+							<!-- Puntos Totales -->
+							<td class="py-3.5 px-4 text-center font-black text-base text-red-500">
+								{item.puntosTotales}
+							</td>
+
+							<!-- Diferencia con el Rival Anterior (Adelante) -->
+							<td class="py-3.5 px-4 text-center">
+								{item.posicion === 1 ? (
+									<span class="text-[10px] font-bold uppercase tracking-wider text-amber-400 bg-amber-950/60 border border-amber-800/80 px-2 py-0.5 rounded">
+										LÍDER
+									</span>
+								) : (
+									<span class="text-xs text-red-400 font-bold">
+										-{item.difAdelante} pts
+									</span>
+								)}
+							</td>
+
+							<!-- Diferencia con el Rival Siguiente (Atrás) -->
+							<td class="py-3.5 px-4 text-center">
+								{item.posicion === tablaCampeonatoProcesada.length ? (
+									<span class="text-xs text-gray-600">-</span>
+								) : (
+									<span class="text-xs text-emerald-400 font-bold">
+										+{item.difAtras} pts
+									</span>
+								)}
+							</td>
+
+						</tr>
+					))}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+
+<!-- SECCIÓN: COPA DE CONSTRUCTORES / ESCUDERÍAS -->
+<div class="space-y-6">
+	<div class="flex justify-between items-end border-b border-neutral-800 pb-4">
+		<div>
+			<h3 class="text-2xl md:text-3xl font-black uppercase tracking-tight text-white">
+				Copa de <span class="text-red-600">Constructores</span>
+			</h3>
+			<p class="text-gray-500 text-xs font-mono">Clasificación oficial por equipos</p>
+		</div>
+		<span class="text-xs font-mono text-gray-400 bg-neutral-900 border border-neutral-800 px-3 py-1 rounded-full uppercase">
+			10 Escuderías
+		</span>
+	</div>
+
+	<div class="bg-[#0d0d0d] rounded-2xl border border-neutral-800 overflow-hidden shadow-[0_0_30px_rgba(0,0,0,0.8)]">
+		<div class="overflow-x-auto">
+			<table class="w-full text-left font-mono text-xs">
+				<thead class="bg-black/80 text-gray-400 uppercase text-[10px] border-b border-neutral-800 tracking-wider">
+					<tr>
+						<th class="py-4 px-4 text-center">Pos</th>
+						<th class="py-4 px-4">Escudería</th>
+						<th class="py-4 px-4 text-center">Pilotos</th>
+						<th class="py-4 px-4 text-center">PTS</th>
+						<th class="py-4 px-4 text-center">Dif. Anterior</th>
+						<th class="py-4 px-4 text-center">Dif. Siguiente</th>
+					</tr>
+				</thead>
+				<tbody class="divide-y divide-neutral-900">
+					{tablaConstructores.map((item) => (
+						<tr class="hover:bg-neutral-900/60 transition-colors group relative">
+							
+							<!-- Posición 1 al 10 -->
+							<td class="py-3.5 px-4 text-center font-black text-sm">
+								<span class={`inline-block w-7 h-7 leading-7 rounded-lg ${
+									item.posicion === 1 ? 'bg-amber-500 text-black font-black shadow-[0_0_10px_rgba(245,158,11,0.5)]' :
+									item.posicion === 2 ? 'bg-slate-300 text-black font-black' :
+									item.posicion === 3 ? 'bg-amber-700 text-white font-black' :
+									'text-gray-400'
+								}`}>
+									{item.posicion}
+								</span>
+							</td>
+
+							<!-- Logo + Nombre de Escudería -->
+							<td class="py-3.5 px-4">
+								<div class="flex items-center gap-3">
+									<span class="w-1.5 h-8 rounded-full shrink-0" style={`background-color: ${item.colorHex}`}></span>
+									<img 
+										src={item.logoEscuderia} 
+										alt={item.nombre} 
+										class="h-6 w-6 object-contain filter drop-shadow-[0_0_4px_rgba(255,255,255,0.2)]"
+										onerror="this.style.display='none'"
+									/>
+									<span class="font-bold text-white text-sm uppercase group-hover:text-red-500 transition-colors">
+										{item.nombre}
+									</span>
+								</div>
+							</td>
+
+							<!-- Fotos de los Pilotos del equipo -->
+							<td class="py-3.5 px-4 text-center">
+								<div class="flex justify-center items-center gap-2">
+									{item.pilotos.map((piloto: any) => (
+										<img 
+											src={piloto.fotoPiloto} 
+											alt={piloto.nombre} 
+											title={piloto.nombre}
+											class="w-8 h-8 rounded-full object-cover border-2 border-neutral-700 hover:border-red-500 hover:scale-110 transition-all cursor-pointer"
+											onerror="this.src='https://via.placeholder.com/150/000000/FFFFFF?text=F1'"
+										/>
+									))}
+								</div>
+							</td>
+
+							<!-- Puntos Totales Acumulados -->
+							<td class="py-3.5 px-4 text-center font-black text-base text-red-500">
+								{item.puntosTotales}
+							</td>
+
+							<!-- Diferencia con el Rival Anterior (Adelante) -->
+							<td class="py-3.5 px-4 text-center">
+								{item.posicion === 1 ? (
+									<span class="text-[10px] font-bold uppercase tracking-wider text-amber-400 bg-amber-950/60 border border-amber-800/80 px-2 py-0.5 rounded">
+										LÍDER
+									</span>
+								) : (
+									<span class="text-xs text-red-400 font-bold">
+										-{item.difAdelante} pts
+									</span>
+								)}
+							</td>
+
+							<!-- Diferencia con el Rival Siguiente (Atrás) -->
+							<td class="py-3.5 px-4 text-center">
+								{item.posicion === tablaConstructores.length ? (
+									<span class="text-xs text-gray-600">-</span>
+								) : (
+									<span class="text-xs text-emerald-400 font-bold">
+										+{item.difAtras} pts
+									</span>
+								)}
+							</td>
+
+						</tr>
+					))}
+				</tbody>
+			</table>
+		</div>
+	</div>
+</div>
+
+
+
+
 
 
 <!-- 2. CARRUSEL DE PILOTOS OFICIALES -->

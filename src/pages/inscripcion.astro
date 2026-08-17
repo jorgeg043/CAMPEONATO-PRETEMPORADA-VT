@@ -1,0 +1,43 @@
+---
+// Usamos una estructura HTML limpia, sin el Layout que incluye el navbar
+---
+
+<!doctype html>
+<html lang="es">
+    <head>
+        <meta charset="UTF-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>Inscripción - Campeonato Pretemporada VT</title>
+        <script src="https://cdn.tailwindcss.com"></script>
+    </head>
+    <body class="bg-black text-white min-h-screen flex items-center justify-center p-6">
+        
+        <div class="max-w-2xl w-full text-center space-y-8">
+            <!-- Título -->
+            <div>
+                <h1 class="text-4xl md:text-5xl font-black uppercase tracking-tighter text-white">
+                    Campeonato <span class="text-red-600">VT 2026</span>
+                </h1>
+                <p class="text-gray-400 font-mono text-sm mt-4">
+                    Completá el formulario para asegurar tu lugar en la grilla oficial.
+                </p>
+            </div>
+
+            <!-- Botón de Acción -->
+            <a 
+                href="https://docs.google.com/forms/d/e/1FAIpQLSebFbwAJF2RS-SAx8WFCUnn6lPf55tsH5Q9Z6eWEGg1FNB07w/viewform?usp=publish-editor" 
+                target="_blank" 
+                rel="noopener noreferrer"
+                class="inline-block bg-gradient-to-r from-red-600 to-red-700 hover:from-red-500 hover:to-red-600 text-white font-black py-4 px-10 rounded-xl transition-all duration-300 text-lg uppercase tracking-widest shadow-[0_0_25px_rgba(225,6,0,0.6)] hover:shadow-[0_0_40px_rgba(225,6,0,0.9)]"
+            >
+                Ir al Formulario
+            </a>
+
+            <!-- Info adicional -->
+            <p class="text-[10px] text-neutral-600 font-mono uppercase tracking-widest">
+                La temporada arranca en Octubre. ¡No te quedes afuera!
+            </p>
+        </div>
+
+    </body>
+</html>

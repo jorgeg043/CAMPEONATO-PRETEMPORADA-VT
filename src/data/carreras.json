@@ -1,0 +1,234 @@
+{
+  "numeroFecha": 1,
+  "tiempoTotalCarrera": "1:31:25.410",
+  "polePosition": {
+    "pilotoId": "piloto-3",
+    "tiempoQualy": "1:29.120"
+  },
+  "vueltaRapida": {
+    "pilotoId": "piloto-1",
+    "tiempoVuelta": "1:32.405"
+  },
+  "posiciones": [
+    {
+      "pilotoId": "piloto-1",
+      "posicion": 1,
+      "dnf": false,
+      "motivoDnf": "",
+      "paradasBoxes": 2,
+      "cambioAleron": false,
+      "compuestosUsados": ["Soft", "Medium", "Hard"],
+      "advertencias": 1,
+      "penalizaciones": "Sin sanciones"
+    },
+    {
+      "pilotoId": "piloto-3",
+      "posicion": 2,
+      "dnf": false,
+      "motivoDnf": "",
+      "paradasBoxes": 2,
+      "cambioAleron": false,
+      "compuestosUsados": ["Soft", "Medium"],
+      "advertencias": 0,
+      "penalizaciones": "Sin sanciones"
+    },
+    {
+      "pilotoId": "piloto-5",
+      "posicion": 3,
+      "dnf": false,
+      "motivoDnf": "",
+      "paradasBoxes": 3,
+      "cambioAleron": true,
+      "compuestosUsados": ["Soft", "Soft", "Medium"],
+      "advertencias": 2,
+      "penalizaciones": "+5s (Límites de pista)"
+    },
+    {
+      "pilotoId": "piloto-7",
+      "posicion": 4,
+      "dnf": false,
+      "motivoDnf": "",
+      "paradasBoxes": 2,
+      "cambioAleron": false,
+      "compuestosUsados": ["Medium", "Hard"],
+      "advertencias": 0,
+      "penalizaciones": "Sin sanciones"
+    },
+    {
+      "pilotoId": "piloto-2",
+      "posicion": 5,
+      "dnf": false,
+      "motivoDnf": "",
+      "paradasBoxes": 2,
+      "cambioAleron": false,
+      "compuestosUsados": ["Soft", "Medium"],
+      "advertencias": 1,
+      "penalizaciones": "Sin sanciones"
+    },
+    {
+      "pilotoId": "piloto-4",
+      "posicion": 6,
+      "dnf": false,
+      "motivoDnf": "",
+      "paradasBoxes": 2,
+      "cambioAleron": false,
+      "compuestosUsados": ["Medium", "Hard"],
+      "advertencias": 0,
+      "penalizaciones": "Sin sanciones"
+    },
+    {
+      "pilotoId": "piloto-6",
+      "posicion": 7,
+      "dnf": false,
+      "motivoDnf": "",
+      "paradasBoxes": 2,
+      "cambioAleron": false,
+      "compuestosUsados": ["Soft", "Hard"],
+      "advertencias": 0,
+      "penalizaciones": "Sin sanciones"
+    },
+    {
+      "pilotoId": "piloto-8",
+      "posicion": 8,
+      "dnf": false,
+      "motivoDnf": "",
+      "paradasBoxes": 3,
+      "cambioAleron": true,
+      "compuestosUsados": ["Soft", "Medium", "Soft"],
+      "advertencias": 3,
+      "penalizaciones": "+10s (Colisión en curva 1)"
+    },
+    {
+      "pilotoId": "piloto-9",
+      "posicion": 9,
+      "dnf": false,
+      "motivoDnf": "",
+      "paradasBoxes": 2,
+      "cambioAleron": false,
+      "compuestosUsados": ["Medium", "Hard"],
+      "advertencias": 1,
+      "penalizaciones": "Sin sanciones"
+    },
+    {
+      "pilotoId": "piloto-10",
+      "posicion": 10,
+      "dnf": false,
+      "motivoDnf": "",
+      "paradasBoxes": 2,
+      "cambioAleron": false,
+      "compuestosUsados": ["Medium", "Hard"],
+      "advertencias": 0,
+      "penalizaciones": "Sin sanciones"
+    },
+    {
+      "pilotoId": "piloto-11",
+      "posicion": 11,
+      "dnf": false,
+      "motivoDnf": "",
+      "paradasBoxes": 2,
+      "cambioAleron": false,
+      "compuestosUsados": ["Soft", "Medium"],
+      "advertencias": 0,
+      "penalizaciones": "Sin sanciones"
+    },
+    {
+      "pilotoId": "piloto-12",
+      "posicion": 12,
+      "dnf": false,
+      "motivoDnf": "",
+      "paradasBoxes": 2,
+      "cambioAleron": false,
+      "compuestosUsados": ["Medium", "Hard"],
+      "advertencias": 1,
+      "penalizaciones": "Sin sanciones"
+    },
+    {
+      "pilotoId": "piloto-13",
+      "posicion": 13,
+      "dnf": false,
+      "motivoDnf": "",
+      "paradasBoxes": 2,
+      "cambioAleron": false,
+      "compuestosUsados": ["Soft", "Medium"],
+      "advertencias": 0,
+      "penalizaciones": "Sin sanciones"
+    },
+    {
+      "pilotoId": "piloto-14",
+      "posicion": 14,
+      "dnf": false,
+      "motivoDnf": "",
+      "paradasBoxes": 2,
+      "cambioAleron": false,
+      "compuestosUsados": ["Medium", "Hard"],
+      "advertencias": 0,
+      "penalizaciones": "Sin sanciones"
+    },
+    {
+      "pilotoId": "piloto-15",
+      "posicion": 15,
+      "dnf": false,
+      "motivoDnf": "",
+      "paradasBoxes": 2,
+      "cambioAleron": false,
+      "compuestosUsados": ["Soft", "Medium"],
+      "advertencias": 0,
+      "penalizaciones": "Sin sanciones"
+    },
+    {
+      "pilotoId": "piloto-16",
+      "posicion": 16,
+      "dnf": false,
+      "motivoDnf": "",
+      "paradasBoxes": 2,
+      "cambioAleron": false,
+      "compuestosUsados": ["Medium", "Hard"],
+      "advertencias": 0,
+      "penalizaciones": "Sin sanciones"
+    },
+    {
+      "pilotoId": "piloto-17",
+      "posicion": 17,
+      "dnf": false,
+      "motivoDnf": "",
+      "paradasBoxes": 2,
+      "cambioAleron": false,
+      "compuestosUsados": ["Soft", "Medium"],
+      "advertencias": 0,
+      "penalizaciones": "Sin sanciones"
+    },
+    {
+      "pilotoId": "piloto-18",
+      "posicion": 18,
+      "dnf": false,
+      "motivoDnf": "",
+      "paradasBoxes": 2,
+      "cambioAleron": false,
+      "compuestosUsados": ["Medium", "Hard"],
+      "advertencias": 0,
+      "penalizaciones": "Sin sanciones"
+    },
+    {
+      "pilotoId": "piloto-19",
+      "posicion": 0,
+      "dnf": true,
+      "motivoDnf": "Fallo de motor",
+      "paradasBoxes": 1,
+      "cambioAleron": false,
+      "compuestosUsados": ["Soft"],
+      "advertencias": 0,
+      "penalizaciones": "Sin sanciones"
+    },
+    {
+      "pilotoId": "piloto-20",
+      "posicion": 0,
+      "dnf": true,
+      "motivoDnf": "Accidente vuelta 12",
+      "paradasBoxes": 0,
+      "cambioAleron": true,
+      "compuestosUsados": ["Medium"],
+      "advertencias": 1,
+      "penalizaciones": "Sin sanciones"
+    }
+  ]
+}
