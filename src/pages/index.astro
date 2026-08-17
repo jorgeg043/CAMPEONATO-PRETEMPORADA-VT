@@ -14,7 +14,6 @@ const PUNTOS_F1: Record<number, number> = { 1: 25, 2: 18, 3: 15, 4: 12, 5: 10, 6
 const tablaCampeonatoProcesada = pilotosData.map((piloto) => {
     let puntosTotales = 0;
     let victorias = 0;
-    let poles = 0;
 
     carrerasCargadas.forEach((carrera: any) => {
         const resultado = carrera.posiciones?.find((p: any) => p.pilotoId === piloto.id);
@@ -341,7 +340,7 @@ const tablaConstructores = escuderiasProcesadas
                                     </td>
                                     <td class="py-3.5 px-4 text-center">
                                         <div class="flex justify-center items-center gap-2">
-                                            {item.pilotos.map((piloto: any) => (
+                                            {item.pilotos.map((piloto) => (
                                                 <img 
                                                     src={piloto.fotoPiloto} 
                                                     alt={piloto.nombre} 
