@@ -1,10 +1,10 @@
 [
   {
     "id": "piloto-1",
-    "nombre": "Piloto 1",
-    "numero": 1,
+    "nombre": "Giova",
+    "numero": 93,
     "periferico": "Simulador",
-    "instagram": "https://instagram.com/usuario1",
+    "instagram": "https://www.instagram.com/giovacapdevila",
     "fotoPiloto": "/pilotos/piloto-1.png",
     "escuderia": {
       "id": "red-bull",
@@ -15,10 +15,10 @@
   },
   {
     "id": "piloto-2",
-    "nombre": "Piloto 2",
-    "numero": 11,
+    "nombre": "Tappa",
+    "numero": 32,
     "periferico": "Joystick",
-    "instagram": "https://instagram.com/usuario2",
+    "instagram": "https://www.instagram.com/leo.tapparello",
     "fotoPiloto": "/pilotos/piloto-2.png",
     "escuderia": {
       "id": "red-bull",
@@ -29,10 +29,10 @@
   },
   {
     "id": "piloto-3",
-    "nombre": "Piloto 3",
-    "numero": 16,
+    "nombre": "Tomas R",
+    "numero": 96,
     "periferico": "Simulador",
-    "instagram": "https://instagram.com/usuario3",
+    "instagram": "https://www.instagram.com/Tomaasrdz",
     "fotoPiloto": "/pilotos/piloto-3.png",
     "escuderia": {
       "id": "ferrari",
@@ -43,10 +43,10 @@
   },
   {
     "id": "piloto-4",
-    "nombre": "Piloto 4",
-    "numero": 55,
-    "periferico": "Joystick",
-    "instagram": "https://instagram.com/usuario4",
+    "nombre": "Fer",
+    "numero": 5,
+    "periferico": "Simulador",
+    "instagram": "https://instagram.com/fer.delasheras",
     "fotoPiloto": "/pilotos/piloto-4.png",
     "escuderia": {
       "id": "ferrari",
@@ -57,10 +57,10 @@
   },
   {
     "id": "piloto-5",
-    "nombre": "Piloto 5",
-    "numero": 4,
+    "nombre": "Claudio",
+    "numero": 87,
     "periferico": "Simulador",
-    "instagram": "https://instagram.com/usuario5",
+    "instagram": "https://instagram.com/dimension.comercial",
     "fotoPiloto": "/pilotos/piloto-5.png",
     "escuderia": {
       "id": "mclaren",
@@ -71,10 +71,10 @@
   },
   {
     "id": "piloto-6",
-    "nombre": "Piloto 6",
-    "numero": 81,
-    "periferico": "Joystick",
-    "instagram": "https://instagram.com/usuario6",
+    "nombre": "Mati",
+    "numero": 22,
+    "periferico": "Simulador",
+    "instagram": "https://instagram.com/lorenzetti_matias",
     "fotoPiloto": "/pilotos/piloto-6.png",
     "escuderia": {
       "id": "mclaren",
@@ -85,10 +85,10 @@
   },
   {
     "id": "piloto-7",
-    "nombre": "Piloto 7",
-    "numero": 63,
+    "nombre": "Simon",
+    "numero": 23,
     "periferico": "Simulador",
-    "instagram": "https://instagram.com/usuario7",
+    "instagram": "https://instagram.com/pablosimon23",
     "fotoPiloto": "/pilotos/piloto-7.png",
     "escuderia": {
       "id": "mercedes",
@@ -99,10 +99,10 @@
   },
   {
     "id": "piloto-8",
-    "nombre": "Piloto 8",
-    "numero": 44,
-    "periferico": "Joystick",
-    "instagram": "https://instagram.com/usuario8",
+    "nombre": "Hernan",
+    "numero": 36,
+    "periferico": "Simulador",
+    "instagram": "https://instagram.com/hernan_romero18",
     "fotoPiloto": "/pilotos/piloto-8.png",
     "escuderia": {
       "id": "mercedes",
@@ -113,10 +113,10 @@
   },
   {
     "id": "piloto-9",
-    "nombre": "Piloto 9",
-    "numero": 14,
-    "periferico": "Simulador",
-    "instagram": "https://instagram.com/usuario9",
+    "nombre": "Nico H",
+    "numero": 12,
+    "periferico": "Mando",
+    "instagram": "https://instagram.com/nicodelasheras",
     "fotoPiloto": "/pilotos/piloto-9.png",
     "escuderia": {
       "id": "aston-martin",
@@ -127,10 +127,10 @@
   },
   {
     "id": "piloto-10",
-    "nombre": "Piloto 10",
-    "numero": 18,
-    "periferico": "Joystick",
-    "instagram": "https://instagram.com/usuario10",
+    "nombre": "Facku",
+    "numero": 95,
+    "periferico": "Simulador",
+    "instagram": "https://instagram.com/facuu.morini",
     "fotoPiloto": "/pilotos/piloto-10.png",
     "escuderia": {
       "id": "aston-martin",
@@ -141,10 +141,10 @@
   },
   {
     "id": "piloto-11",
-    "nombre": "Piloto 11",
-    "numero": 10,
+    "nombre": "Rodri",
+    "numero": 43,
     "periferico": "Simulador",
-    "instagram": "https://instagram.com/usuario11",
+    "instagram": "https://instagram.com/roodribarros",
     "fotoPiloto": "/pilotos/piloto-11.png",
     "escuderia": {
       "id": "alpine",
@@ -155,10 +155,10 @@
   },
   {
     "id": "piloto-12",
-    "nombre": "Piloto 12",
-    "numero": 31,
-    "periferico": "Joystick",
-    "instagram": "https://instagram.com/usuario12",
+    "nombre": "Ema",
+    "numero": 30,
+    "periferico": "Simulador",
+    "instagram": "https://instagram.com/Mxcixs_20",
     "fotoPiloto": "/pilotos/piloto-12.png",
     "escuderia": {
       "id": "alpine",
@@ -169,10 +169,10 @@
   },
   {
     "id": "piloto-13",
-    "nombre": "Piloto 13",
-    "numero": 20,
-    "periferico": "Simulador",
-    "instagram": "https://instagram.com/usuario13",
+    "nombre": "Tyzr0n",
+    "numero": 13,
+    "periferico": "Mando",
+    "instagram": "https://instagram.com/fedeflak",
     "fotoPiloto": "/pilotos/piloto-13.png",
     "escuderia": {
       "id": "haas",
@@ -183,10 +183,10 @@
   },
   {
     "id": "piloto-14",
-    "nombre": "Piloto 14",
-    "numero": 27,
-    "periferico": "Joystick",
-    "instagram": "https://instagram.com/usuario14",
+    "nombre": "Diego V",
+    "numero": 8,
+    "periferico": "Simulador",
+    "instagram": "https://instagram.com/villanuevadiegoa",
     "fotoPiloto": "/pilotos/piloto-14.png",
     "escuderia": {
       "id": "haas",
@@ -197,10 +197,10 @@
   },
   {
     "id": "piloto-15",
-    "nombre": "Piloto 15",
-    "numero": 22,
+    "nombre": "Mateo",
+    "numero": 113,
     "periferico": "Simulador",
-    "instagram": "https://instagram.com/usuario15",
+    "instagram": "https://instagram.com/mateoalmaraz6",
     "fotoPiloto": "/pilotos/piloto-15.png",
     "escuderia": {
       "id": "rb",
@@ -225,10 +225,10 @@
   },
   {
     "id": "piloto-17",
-    "nombre": "Piloto 17",
-    "numero": 77,
+    "nombre": "Diego S",
+    "numero": 10,
     "periferico": "Simulador",
-    "instagram": "https://instagram.com/usuario17",
+    "instagram": "https://instagram.com/diiego_sebastian23",
     "fotoPiloto": "/pilotos/piloto-17.png",
     "escuderia": {
       "id": "sauber",
@@ -239,10 +239,10 @@
   },
   {
     "id": "piloto-18",
-    "nombre": "Piloto 18",
-    "numero": 24,
-    "periferico": "Joystick",
-    "instagram": "https://instagram.com/usuario18",
+    "nombre": "Pancho",
+    "numero": 9,
+    "periferico": "Simulador",
+    "instagram": "https://instagram.com/Francisco_defilippi",
     "fotoPiloto": "/pilotos/piloto-18.png",
     "escuderia": {
       "id": "sauber",
@@ -253,10 +253,10 @@
   },
   {
     "id": "piloto-19",
-    "nombre": "Piloto 19",
-    "numero": 23,
+    "nombre": "Nico D",
+    "numero": 7,
     "periferico": "Simulador",
-    "instagram": "https://instagram.com/usuario19",
+    "instagram": "https://instagram.com/Nicoodiazz07",
     "fotoPiloto": "/pilotos/piloto-19.png",
     "escuderia": {
       "id": "williams",
@@ -267,10 +267,10 @@
   },
   {
     "id": "piloto-20",
-    "nombre": "Piloto 20",
-    "numero": 2,
-    "periferico": "Joystick",
-    "instagram": "https://instagram.com/usuario20",
+    "nombre": "Tomi",
+    "numero": 3,
+    "periferico": "Simulador",
+    "instagram": "https://instagram.com/tomiferrus",
     "fotoPiloto": "/pilotos/piloto-20.png",
     "escuderia": {
       "id": "williams",

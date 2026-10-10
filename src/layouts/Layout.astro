@@ -7,17 +7,24 @@ import '../styles/global.css';
     <head>
         <meta charset="UTF-8" />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-        <title>Inscripción - Campeonato Pretemporada VT</title>
+        <title>Campeonato Pretemporada VT</title>
     </head>
     <body class="bg-black text-white min-h-screen selection:bg-red-600 selection:text-white">
         
-        <!-- NAVBAR SUPERIOR STICKY (Modo Inscripción) -->
+        <!-- NAVBAR SUPERIOR STICKY -->
         <header class="border-b border-neutral-900 bg-black/80 backdrop-blur-md sticky top-0 z-50">
-            <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-center">
-                <!-- Solo Logo / Marca Centrado -->
+            <div class="max-w-6xl mx-auto px-4 h-16 flex items-center justify-between">
+                <!-- Logo / Marca -->
                 <a href="/" class="text-lg font-black uppercase tracking-tighter text-white hover:text-red-500 transition-colors">
-                    F1 <span class="text-red-600 font-mono">PRETEMPORADA 2027</span>
+                    VT <span class="text-red-600 font-mono">2026</span>
                 </a>
+
+                <!-- Opciones de Navegación -->
+                <nav class="flex items-center gap-6 font-mono text-xs uppercase tracking-widest">
+                    <a href="/" class="text-gray-400 hover:text-white transition-colors">Inicio</a>
+                    <a href="/historial" class="text-gray-400 hover:text-white transition-colors">Historial</a>
+                    <a href="/estadistica" class="text-gray-400 hover:text-white transition-colors">Estadística</a>
+                </nav>
             </div>
         </header>
 
@@ -28,7 +35,25 @@ import '../styles/global.css';
 
         <!-- FOOTER SENCILLO -->
         <footer class="py-8 text-center text-neutral-600 text-[10px] font-mono uppercase tracking-widest border-t border-neutral-900 mt-12">
-            Campeonato Pretemporada VT © 2027
+            Campeonato Pretemporada VT © 2026
         </footer>
+
+       <!-- SPONSOR OFICIAL FLOTANTE (Con enlace a Instagram) -->
+        <div class="fixed bottom-5 right-5 z-50 bg-neutral-900/90 border border-neutral-700 p-3 rounded-2xl shadow-[0_4px_25px_rgba(0,0,0,0.9)] hover:scale-105 transition-all duration-300">
+            <a 
+                href="https://www.instagram.com/dimension.comercial" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                class="flex flex-col items-center gap-1 block group"
+            >
+                <span class="text-[9px] font-mono text-gray-400 uppercase tracking-widest group-hover:text-red-400 transition-colors">Sponsor Oficial</span>
+                <img 
+                    src="/sponsor.png" 
+                    alt="Dimension Comercial" 
+                    class="h-20 md:h-22 object-contain filter-none opacity-100"
+                />
+            </a>
+        </div>
+
     </body>
 </html>
