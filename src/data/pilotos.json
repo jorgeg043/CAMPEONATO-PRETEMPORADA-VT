@@ -29,10 +29,10 @@
   },
   {
     "id": "piloto-3",
-    "nombre": "Tomas R",
-    "numero": 96,
+    "nombre": "Mateo",
+    "numero": 113,
     "periferico": "Simulador",
-    "instagram": "https://www.instagram.com/Tomaasrdz",
+    "instagram": "https://instagram.com/mateoalmaraz6",
     "fotoPiloto": "/pilotos/piloto-3.png",
     "escuderia": {
       "id": "ferrari",
@@ -197,10 +197,10 @@
   },
   {
     "id": "piloto-15",
-    "nombre": "Mateo",
-    "numero": 113,
+    "nombre": "vacante-15",
+    "numero": 0,
     "periferico": "Simulador",
-    "instagram": "https://instagram.com/mateoalmaraz6",
+    "instagram": "https://instagram.com/",
     "fotoPiloto": "/pilotos/piloto-15.png",
     "escuderia": {
       "id": "rb",
@@ -211,7 +211,7 @@
   },
   {
     "id": "piloto-16",
-    "nombre": "Piloto 16",
+    "nombre": "vacante 16",
     "numero": 3,
     "periferico": "Joystick",
     "instagram": "https://instagram.com/usuario16",
