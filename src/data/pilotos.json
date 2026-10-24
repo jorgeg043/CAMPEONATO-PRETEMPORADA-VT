@@ -130,7 +130,7 @@
     "nombre": "Facku",
     "numero": 95,
     "periferico": "Simulador",
-    "instagram": "https://instagram.com/facuu.morini",
+    "instagram": "https://www.instagram.com/facundo_morini/",
     "fotoPiloto": "/pilotos/piloto-10.png",
     "escuderia": {
       "id": "aston-martin",
@@ -211,10 +211,10 @@
   },
   {
     "id": "piloto-16",
-    "nombre": "vacante 16",
-    "numero": 3,
-    "periferico": "Joystick",
-    "instagram": "https://instagram.com/usuario16",
+    "nombre": "Saiko",
+    "numero": 89,
+    "periferico": "Simulador",
+    "instagram": "https://www.instagram.com/martin_sosa89",
     "fotoPiloto": "/pilotos/piloto-16.png",
     "escuderia": {
       "id": "rb",
