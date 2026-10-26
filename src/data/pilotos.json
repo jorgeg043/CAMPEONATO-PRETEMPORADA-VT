@@ -197,10 +197,10 @@
   },
   {
     "id": "piloto-15",
-    "nombre": "Juanma",
+    "nombre": "Vacante",
     "numero": 0,
-    "periferico": "Simulador",
-    "instagram": "https://instagram.com/fruajuanma/",
+    "periferico": "",
+    "instagram": "",
     "fotoPiloto": "/pilotos/piloto-15.png",
     "escuderia": {
       "id": "rb",
