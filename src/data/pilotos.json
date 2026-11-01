@@ -200,6 +200,7 @@
     "nombre": "Vacante",
     "numero": 0,
     "periferico": "Simulador",
+    "periferico": "",
     "instagram": "",
     "fotoPiloto": "/pilotos/piloto-15.png",
     "escuderia": {

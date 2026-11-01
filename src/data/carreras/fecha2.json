@@ -1,0 +1,234 @@
+{
+  "numeroFecha": 2,
+  "tiempoTotalCarrera": "0:52:14.898",
+  "polePosition": {
+    "pilotoId": "piloto-16",
+    "tiempoQualy": "1:30.910"
+  },
+  "vueltaRapida": {
+    "pilotoId": "piloto-12",
+    "tiempoVuelta": "1:45.484"
+  },
+  "posiciones": [
+    {
+      "pilotoId": "piloto-1",
+      "posicion": 15,
+      "dnf": false,
+      "motivoDnf": "",
+      "paradasBoxes": 0,
+      "cambioAleron": false,
+      "compuestosUsados": ["N/A"],
+      "advertencias": 0,
+      "penalizaciones": "No corrió"
+    },
+    {
+      "pilotoId": "piloto-2",
+      "posicion": 9,
+      "dnf": false,
+      "motivoDnf": "",
+      "paradasBoxes": 2,
+      "cambioAleron": true,
+      "compuestosUsados": ["Wet", "Intermedios", "Intermedios"],
+      "advertencias": 2,
+      "penalizaciones": "Colisión con Saiko, exceder límite de pista"
+    },
+    {
+      "pilotoId": "piloto-3",
+      "posicion": 16,
+      "dnf": false,
+      "motivoDnf": "",
+      "paradasBoxes": 0,
+      "cambioAleron": false,
+      "compuestosUsados": [""],
+      "advertencias": 0,
+      "penalizaciones": "No corrió"
+    },
+    {
+      "pilotoId": "piloto-4",
+      "posicion": 6,
+      "dnf": false,
+      "motivoDnf": "",
+      "paradasBoxes": 2,
+      "cambioAleron": true,
+      "compuestosUsados": ["Wet", "Intermedios", "Intermedios"],
+      "advertencias": 2,
+      "penalizaciones": "Exceder límite de pista"
+    },
+    {
+      "pilotoId": "piloto-5",
+      "posicion": 14,
+      "dnf": true,
+      "motivoDnf": "Vuelta 3",
+      "paradasBoxes": 0,
+      "cambioAleron": false,
+      "compuestosUsados": ["Wet"],
+      "advertencias": 0,
+      "penalizaciones": "DNF Vuelta 1"
+    },
+    {
+      "pilotoId": "piloto-6",
+      "posicion": 13,
+      "dnf": true,
+      "motivoDnf": "",
+      "paradasBoxes": 1,
+      "cambioAleron": false,
+      "compuestosUsados": ["Wet", "Intermedios"],
+      "advertencias": 1,
+      "penalizaciones": "Colisión con Tappa, DNF Vuelta 3"
+    },
+    {
+      "pilotoId": "piloto-7",
+      "posicion": 8,
+      "dnf": false,
+      "motivoDnf": "",
+      "paradasBoxes": 4,
+      "cambioAleron": true,
+      "compuestosUsados": ["Wet", "Intermedios", "Intermedios", "Intermedios", "Intermedios"],
+      "advertencias": 4,
+      "penalizaciones": "Colisión grave con Fede +10s, advertencia cruzar línea de pit, exceder límite de pista +10s"
+    },
+    {
+      "pilotoId": "piloto-8",
+      "posicion": 4,
+      "dnf": false,
+      "motivoDnf": "",
+      "paradasBoxes": 3,
+      "cambioAleron": true,
+      "compuestosUsados": ["Wet", "Intermedios", "Intermedios", "Intermedios"],
+      "advertencias": 2,
+      "penalizaciones": "Colisión grave con Ema +10s, límite de pista"
+    },
+    {
+      "pilotoId": "piloto-9",
+      "posicion": 12,
+      "dnf": true,
+      "motivoDnf": "",
+      "paradasBoxes": 1,
+      "cambioAleron": true,
+      "compuestosUsados": ["Wet", "Intermedios"],
+      "advertencias": 2,
+      "penalizaciones": "Colisión grave con fer +10s, DNF vuelta 3"
+    },
+    {
+      "pilotoId": "piloto-10",
+      "posicion": 2,
+      "dnf": false,
+      "motivoDnf": "",
+      "paradasBoxes": 1,
+      "cambioAleron": false,
+      "compuestosUsados": ["Wet", "Intermedios"],
+      "advertencias": 2,
+      "penalizaciones": "Colisión con Rodri, saltarse la curva"
+    },
+    {
+      "pilotoId": "piloto-11",
+      "posicion": 3,
+      "dnf": false,
+      "motivoDnf": "",
+      "paradasBoxes": 0,
+      "cambioAleron": true,
+      "compuestosUsados": ["Wet", "Intermedios"],
+      "advertencias": 3,
+      "penalizaciones": "Exceder límite de pista, 2 colisiones con Facku"
+    },
+    {
+      "pilotoId": "piloto-12",
+      "posicion": 1,
+      "dnf": false,
+      "motivoDnf": "",
+      "paradasBoxes": 1,
+      "cambioAleron": true,
+      "compuestosUsados": ["Wet", "Intermedios"],
+      "advertencias": 1,
+      "penalizaciones": "Saltarse la curva"
+    },
+    {
+      "pilotoId": "piloto-13",
+      "posicion": 10,
+      "dnf": true,
+      "motivoDnf": "",
+      "paradasBoxes": 1,
+      "cambioAleron": true,
+      "compuestosUsados": ["Wet", "Intermedios"],
+      "advertencias": 5,
+      "penalizaciones": "Colisión con Claudio, salida nula (Drive-Through + vuelta anulada, colisión grave con Fer +10s, exceder límite de pista, DNF vuelta 14"
+    },
+    {
+      "pilotoId": "piloto-14",
+      "posicion": 17,
+      "dnf": false,
+      "motivoDnf": "",
+      "paradasBoxes": 0,
+      "cambioAleron": false,
+      "compuestosUsados": [""],
+      "advertencias": 0,
+      "penalizaciones": "No corrió"
+    },
+    {
+      "pilotoId": "piloto-15",
+      "posicion": 18,
+      "dnf": false,
+      "motivoDnf": "",
+      "paradasBoxes": 0,
+      "cambioAleron": false,
+      "compuestosUsados": [""],
+      "advertencias": 0,
+      "penalizaciones": "No corrió"
+    },
+    {
+      "pilotoId": "piloto-16",
+      "posicion": 11,
+      "dnf": true,
+      "motivoDnf": "",
+      "paradasBoxes": 1,
+      "cambioAleron": false,
+      "compuestosUsados": ["Wet", "Intermedios"],
+      "advertencias": 2,
+      "penalizaciones": "Exceder límite de pista, DNF Vuelta 12"
+    },
+    {
+      "pilotoId": "piloto-17",
+      "posicion": 7,
+      "dnf": false,
+      "motivoDnf": "",
+      "paradasBoxes": 1,
+      "cambioAleron": true,
+      "compuestosUsados": ["Wet", "Intermedios"],
+      "advertencias": 3,
+      "penalizaciones": "Exceder límite de pista, saltarse la curva +3s"
+    },
+    {
+      "pilotoId": "piloto-18",
+      "posicion": 5,
+      "dnf": false,
+      "motivoDnf": "",
+      "paradasBoxes": 1,
+      "cambioAleron": false,
+      "compuestosUsados": ["Wet", "Intermedios"],
+      "advertencias": 1,
+      "penalizaciones": "Colisión con Tappa"
+    },
+    {
+      "pilotoId": "piloto-19",
+      "posicion": 19,
+      "dnf": false,
+      "motivoDnf": "",
+      "paradasBoxes": 0,
+      "cambioAleron": false,
+      "compuestosUsados": [""],
+      "advertencias": 0,
+      "penalizaciones": "No corrió"
+    },
+    {
+      "pilotoId": "piloto-20",
+      "posicion": 20,
+      "dnf": false,
+      "motivoDnf": "Paredon",
+      "paradasBoxes": 0,
+      "cambioAleron": false,
+      "compuestosUsados": [""],
+      "advertencias": 0,
+      "penalizaciones": "No corrió"
+    }
+  ]
+}
