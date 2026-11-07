@@ -1,0 +1,234 @@
+{
+  "numeroFecha": 3,
+  "tiempoTotalCarrera": "0:48:20.815",
+  "polePosition": {
+    "pilotoId": "piloto-10",
+    "tiempoQualy": "1:04.601"
+  },
+  "vueltaRapida": {
+    "pilotoId": "piloto-9",
+    "tiempoVuelta": "1:07.884"
+  },
+  "posiciones": [
+    {
+      "pilotoId": "piloto-1",
+      "posicion": 12,
+      "dnf": true,
+      "motivoDnf": "",
+      "paradasBoxes": 1,
+      "cambioAleron": false,
+      "compuestosUsados": ["Hard-Medium"],
+      "advertencias": 4,
+      "penalizaciones": "Exceder límite de pista, colisión con Panchito, acelerar en Pit +10s, exceso de velocidad en CSV Drive-through, DNF vuelta 4"
+    },
+    {
+      "pilotoId": "piloto-2",
+      "posicion": 4,
+      "dnf": false,
+      "motivoDnf": "",
+      "paradasBoxes": 3,
+      "cambioAleron": true,
+      "compuestosUsados": ["Hard", "Medium", "Soft", "intermedios"],
+      "advertencias": 5,
+      "penalizaciones": "Exceder límite de pista, colisión grave con Nico H +10s, colisión con Panchito, saltarse la curva +3s"
+    },
+    {
+      "pilotoId": "piloto-3",
+      "posicion": 18,
+      "dnf": false,
+      "motivoDnf": "",
+      "paradasBoxes": 0,
+      "cambioAleron": false,
+      "compuestosUsados": [""],
+      "advertencias": 0,
+      "penalizaciones": "No corrió"
+    },
+    {
+      "pilotoId": "piloto-4",
+      "posicion": 7,
+      "dnf": false,
+      "motivoDnf": "",
+      "paradasBoxes": 6,
+      "cambioAleron": true,
+      "compuestosUsados": ["Medium", "Hard", "Medium", "Medium", "Medium", "Medium", "intermedios"],
+      "advertencias": 9,
+      "penalizaciones": "Colisión con Rodri y Simon, exceder límite de pista +3s, acelerar en pit +10s, cruzar línea blanca en pit"
+    },
+    {
+      "pilotoId": "piloto-5",
+      "posicion": 11,
+      "dnf": true,
+      "motivoDnf": "Vuelta 8",
+      "paradasBoxes": 2,
+      "cambioAleron": false,
+      "compuestosUsados": ["Hard", "Medium", "Soft"],
+      "advertencias": 5,
+      "penalizaciones": "Colisión con Giova, exceder límite de pista +3s, acelerar en pit +10s, DNF vuelta 8"
+    },
+    {
+      "pilotoId": "piloto-6",
+      "posicion": 2,
+      "dnf": false,
+      "motivoDnf": "",
+      "paradasBoxes": 4,
+      "cambioAleron": true,
+      "compuestosUsados": ["Hard", "Medium", "Soft","Medium", "Intermedios"],
+      "advertencias": 5,
+      "penalizaciones": "Exceder límite de pista +3s, colisión con Diego"
+    },
+    {
+      "pilotoId": "piloto-7",
+      "posicion": 3,
+      "dnf": false,
+      "motivoDnf": "",
+      "paradasBoxes": 4,
+      "cambioAleron": true,
+      "compuestosUsados": ["Hard", "Medium", "Medium", "Hard", "intermedios"],
+      "advertencias": 5,
+      "penalizaciones": "Exceder límite de pista +3s, colisión con Fer, colisión con Tappa"
+    },
+    {
+      "pilotoId": "piloto-8",
+      "posicion": 1,
+      "dnf": false,
+      "motivoDnf": "",
+      "paradasBoxes": 5,
+      "cambioAleron": true,
+      "compuestosUsados": ["Medium", "Hard", "Medium", "Hard", "Soft", "Intermedios"],
+      "advertencias": 5,
+      "penalizaciones": "Colisión con Diego, exceder límite de pista, saltarse la curva +3s"
+    },
+    {
+      "pilotoId": "piloto-9",
+      "posicion": 8,
+      "dnf": true,
+      "motivoDnf": "",
+      "paradasBoxes": 5,
+      "cambioAleron": true,
+      "compuestosUsados": ["Hard", "Medium", "Soft", "Medium", "Medium", "Intermedios"],
+      "advertencias": 4,
+      "penalizaciones": "Exceder límite de pista +3s, colisión con Simon, DNF vuelta 30"
+    },
+    {
+      "pilotoId": "piloto-10",
+      "posicion": 16,
+      "dnf": true,
+      "motivoDnf": "",
+      "paradasBoxes": 1,
+      "cambioAleron": false,
+      "compuestosUsados": ["Hard", "Medium"],
+      "advertencias": 2,
+      "penalizaciones": "Exceso de velocidad en CSV Drive-Through, DSC por ignorar bandera amarilla vuelta 21"
+    },
+    {
+      "pilotoId": "piloto-11",
+      "posicion": 17,
+      "dnf": true,
+      "motivoDnf": "",
+      "paradasBoxes": 1,
+      "cambioAleron": false,
+      "compuestosUsados": ["Medium", "Hard"],
+      "advertencias": 3,
+      "penalizaciones": "Acelerar en pit +10s, exceder límite de pista, ignorar bandera amarilla +10s y DSC vuelta 18"
+    },
+    {
+      "pilotoId": "piloto-12",
+      "posicion": 13,
+      "dnf": true,
+      "motivoDnf": "",
+      "paradasBoxes": 0,
+      "cambioAleron": false,
+      "compuestosUsados": ["Medium"],
+      "advertencias": 1,
+      "penalizaciones": "Exceder límite de pista, DNF vuelta 2"
+    },
+    {
+      "pilotoId": "piloto-13",
+      "posicion": 9,
+      "dnf": true,
+      "motivoDnf": "",
+      "paradasBoxes": 3,
+      "cambioAleron": true,
+      "compuestosUsados": ["Medium", "Hard", "Soft", "Medium"],
+      "advertencias": 6,
+      "penalizaciones": "Saltarse la curva y exceder límites de pista +6s, DSC por exceso de velocidad en CSV vuelta 26"
+    },
+    {
+      "pilotoId": "piloto-14",
+      "posicion": 5,
+      "dnf": false,
+      "motivoDnf": "",
+      "paradasBoxes": 4,
+      "cambioAleron": false,
+      "compuestosUsados": ["Medium", "Hard", "Medium","Hard", "Intermedios"],
+      "advertencias": 6,
+      "penalizaciones": "Exceder límite de pista +3s, acelerar en pit +10s, colisión con Mati"
+    },
+    {
+      "pilotoId": "piloto-15",
+      "posicion": 19,
+      "dnf": false,
+      "motivoDnf": "",
+      "paradasBoxes": 0,
+      "cambioAleron": false,
+      "compuestosUsados": [""],
+      "advertencias": 0,
+      "penalizaciones": "No corrió"
+    },
+    {
+      "pilotoId": "piloto-16",
+      "posicion": 14,
+      "dnf": true,
+      "motivoDnf": "",
+      "paradasBoxes": 2,
+      "cambioAleron": false,
+      "compuestosUsados": ["Medium", "Medium", "Hard"],
+      "advertencias": 9,
+      "penalizaciones": "Exceder límite de pista +6s, exceso de velocidad en CSV Drive-through, DSC por ignorar bandera amarilla vuelta 28"
+    },
+    {
+      "pilotoId": "piloto-17",
+      "posicion": 10,
+      "dnf": true,
+      "motivoDnf": "",
+      "paradasBoxes": 2,
+      "cambioAleron": false,
+      "compuestosUsados": ["Medium", "Medium", "Hard"],
+      "advertencias": 6,
+      "penalizaciones": "Exceder límite de pista +3s, exceso de velocidad en CSV Drive-through, acelerar en pit +10s, DNF vuelta 26"
+    },
+    {
+      "pilotoId": "piloto-18",
+      "posicion": 15,
+      "dnf": true,
+      "motivoDnf": "",
+      "paradasBoxes": 1,
+      "cambioAleron": false,
+      "compuestosUsados": ["Medium", "Hard"],
+      "advertencias": 6,
+      "penalizaciones": "Exceder límite de pista, colisión con Giova, exceso de velocidad en CSV Drive-through, DSC por ignorar bandera amarilla vuelta 21"
+    },
+    {
+      "pilotoId": "piloto-19",
+      "posicion": 6,
+      "dnf": false,
+      "motivoDnf": "",
+      "paradasBoxes": 5,
+      "cambioAleron": false,
+      "compuestosUsados": ["Hard", "Medium", "Medium", "Soft", "Soft", "intermedios"],
+      "advertencias": 4,
+      "penalizaciones": "Exceder límite de pista +3s, acelerar en pit +10s"
+    },
+    {
+      "pilotoId": "piloto-20",
+      "posicion": 20,
+      "dnf": false,
+      "motivoDnf": "Paredon",
+      "paradasBoxes": 0,
+      "cambioAleron": false,
+      "compuestosUsados": [""],
+      "advertencias": 0,
+      "penalizaciones": "No corrió"
+    }
+  ]
+}
